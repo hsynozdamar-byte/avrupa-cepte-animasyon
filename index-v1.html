@@ -1,13 +1,94 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=./">
-<link rel="canonical" href="./">
-<title>Avrupa Cepte · Tanıtım akışı</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f6f8">
+  <title>Avrupa Cepte · Tanıtım akışı</title>
+  <link rel="stylesheet" href="assets/font.css">
+  <link rel="stylesheet" href="styles-v1.css">
 </head>
 <body>
-<p>Taşındı: <a href="./">Tanıtım akışı</a></p>
-<script>location.replace('./');</script>
+<header class="studio-header">
+  <a class="brand" href="./">
+    <span class="brand-mark">a<span>c</span></span>
+    <strong>Avrupa Cepte</strong>
+    <span class="header-divider"></span>
+    <span class="header-caption">Tanıtım akışı</span>
+  </a>
+  <div class="header-right">
+    <button id="return-single" style="display:none;">Tek sahneye dön ↙</button>
+    <span class="preview-tag"><i></i> Hareket önizlemesi</span>
+    <a href="https://www.figma.com/design/P1pFVExX502FQrV6nCLTjJ/Avrupa-Cepte?node-id=2980-82597&t=2pFAzzNfoVad6KgR-4" target="_blank" rel="noreferrer">Figma ↗</a>
+  </div>
+</header>
+<main class="workspace">
+  <aside class="director" id="director-sidebar">
+    <div class="eyebrow">TANITIM · 01—04</div>
+    <h1 id="director-heading">Bir paylaşımla<br>başlar.</h1>
+    <p class="intro" id="director-desc">Görünür ol. Bağ kur.<br>Sesini Avrupa’ya duyur.</p>
+    <nav class="scene-picker" aria-label="Sahneler">
+      <button class="scene-tab selected" data-scene="0">
+        <span class="step">01</span>
+        <span><strong>Görünür ol</strong><small>Açılış · sıralı baloncuklar</small></span>
+        <span class="tab-arrow">↗</span>
+      </button>
+      <button class="scene-tab" data-scene="1">
+        <span class="step">02</span>
+        <span><strong>Topluluğuna ulaş</strong><small>Gönderi → ayrık ağ geçişi</small></span>
+        <span class="tab-arrow">↗</span>
+      </button>
+      <button class="scene-tab" data-scene="2">
+        <span class="step">03</span>
+        <span><strong>Sesini duyur</strong><small>Yayılım · başarı grafiği</small></span>
+        <span class="tab-arrow">↗</span>
+      </button>
+      <button class="scene-tab" data-scene="3">
+        <span class="step">04</span>
+        <span><strong>3X Büyüme</strong><small>Premium modal · harita animasyonu</small></span>
+        <span class="tab-arrow">↗</span>
+      </button>
+    </nav>
+    <div class="view-options">
+      <button id="view-toggle" aria-pressed="false">Tüm sahneleri birlikte gör <span>↔</span></button>
+    </div>
+    <p class="keyboard-tip">← → sahne değiştir <span>·</span> boşluk duraklat</p>
+  </aside>
+
+  <section class="preview-area" aria-label="Animasyon önizlemesi">
+    <div class="phones" id="phones"></div>
+    <div class="transport">
+      <button class="icon-button" id="play" aria-label="Duraklat">II</button>
+      <button class="icon-button replay" id="replay" aria-label="Baştan oynat">↺</button>
+      <div class="timeline">
+        <label class="sr-only" for="scrubber">Sahne zamanı</label>
+        <input id="scrubber" type="range" min="0" max="1000" value="0">
+        <span id="time">00.0 / 05.0</span>
+      </div>
+      <label class="sr-only" for="speed">Oynatma hızı</label>
+      <select id="speed">
+        <option value="0.5">0,5×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.5">1,5×</option>
+      </select>
+      <button id="auto" class="auto-button" aria-pressed="false">Otomatik <i></i></button>
+    </div>
+    <div class="preview-caption">
+      <span id="caption">01 / 04</span>
+      <span>393 × 852 <span class="caption-dot">·</span> Canlı HTML</span>
+    </div>
+  </section>
+
+  <aside class="motion-note" id="motion-note-sidebar">
+    <span class="eyebrow">SAHNENİN HİSSİ</span>
+    <h2 id="note-title">Dikkat, doğalca<br>üzerinde.</h2>
+    <p id="note-text">Paylaşım merkezden büyüyerek açılır; ardından baloncuklar sırayla belirir.</p>
+    <div class="note-rule"></div>
+    <span class="note-bottom">Tasarımın ritminde.<br>Kesintisiz, yumuşak hareket.</span>
+  </aside>
+</main>
+<div class="toast" role="status" aria-live="polite"></div>
+<script src="assets/d3.min.js"></script>
+<script src="app-v1.js"></script>
 </body>
 </html>
