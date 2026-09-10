@@ -35,6 +35,7 @@ Klavye: sol/sağ ok = sahne değiştir; boşluk = oynat/duraklat. Azaltılmış 
 - `app.js`: Sahneler, hareket, bağlantılar, küre ve kontroller. Sahnelerin metin ve süre ayarları dosyanın başındaki `scenes` dizisinde.
 - `assets/`: Figma'dan indirilen orijinal görseller, Satoshi fontları, yerel D3 paketi, Natural Earth haritası.
 - `assets-manifest.json`: Figma görsellerinin kaynak eşlemesi; uygulama bu geçici URL'leri kullanmaz.
+- `index-v0.html` / `app-v0.js` / `styles-v0.css`: Önceki kesit (arşiv).
 
 ## Kaynaklar
 
