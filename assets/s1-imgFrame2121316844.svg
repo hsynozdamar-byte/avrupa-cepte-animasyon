@@ -1,0 +1,25 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="-20" y="-20" width="58" height="58"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(10px);clip-path:url(#bgblur_1_0_70_clip_path);height:100%;width:100%"></div></foreignObject><g id="Frame 2121316844" data-figma-bg-blur-radius="20">
+<g clip-path="url(#clip0_0_70)">
+<rect width="18" height="18" rx="9" fill="url(#paint0_radial_0_70)"/>
+<g id="Ellipse 40" filter="url(#filter1_f_0_70)">
+<ellipse cx="-1.25655" cy="111.778" rx="102.922" ry="43.2007" transform="rotate(42.9876 -1.25655 111.778)" fill="#0055FF"/>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="bgblur_1_0_70_clip_path" transform="translate(20 20)"><rect width="18" height="18" rx="9"/>
+</clipPath><filter id="filter1_f_0_70" x="-122.123" y="-5.20468" width="241.733" height="233.965" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="20" result="effect1_foregroundBlur_0_70"/>
+</filter>
+<radialGradient id="paint0_radial_0_70" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(10.7455 6.54545) rotate(98.6641) scale(11.5868)">
+<stop offset="0.421961" stop-color="#0055FF" stop-opacity="0.01"/>
+<stop offset="1" stop-color="#0055FF" stop-opacity="0.56"/>
+</radialGradient>
+<clipPath id="clip0_0_70">
+<rect width="18" height="18" rx="9" fill="white"/>
+</clipPath>
+</defs>
+</svg>
