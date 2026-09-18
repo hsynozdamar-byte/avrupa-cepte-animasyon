@@ -20,6 +20,7 @@
   }
   .art { left: 0; top: 0; width: 393px; height: 852px; overflow: visible; }
 
+  .skip, .cta { cursor: pointer; }
   .skip {
     right: 24px; top: 70px; margin: 0;
     font-size: 14px; font-weight: 600; color: var(--muted);
@@ -64,6 +65,9 @@
   .art .t-mute { fill: var(--muted); font-weight: 500; }
   .art .t-brand { fill: var(--brand); font-weight: 600; }
   .art .pill { fill: var(--surface); stroke: var(--line); stroke-width: 1; }
+  .art .globe-land { fill: var(--brand-mid); fill-opacity: .42; stroke: var(--brand); stroke-opacity: .18; stroke-width: .6; }
+  .art .globe-grat { fill: none; stroke: var(--brand); stroke-opacity: .12; stroke-width: .6; }
+  .art .globe-rim { fill: none; stroke: var(--brand); stroke-opacity: .22; stroke-width: 1; }
 </style>
 </head>
 <body>
@@ -109,7 +113,7 @@
       <ul class="chain" aria-label="Akış">
         <li>Aidiyet</li><li>Tavsiye</li><li>Kişisel akış</li><li>Erişim</li>
       </ul>
-      <p class="lead">Dört karşılama ekranı tek bir anlatı kurar: dağınık insanlar buluşur, aralarında tavsiye dolaşır, bu bilgi kişisel bir akışa iner ve sonunda bir hizmet doğru topluluğa ulaşır. Her ekran kendi başına <strong>3,6 saniye</strong> döner.</p>
+      <p class="lead">Dört karşılama ekranı tek bir anlatı kurar: dağınık insanlar buluşur, aralarında tavsiye dolaşır, bu bilgi kişisel bir akışa iner ve sonunda bir hizmet doğru topluluğa ulaşır. Her ekran bir kez oynar, döngü yok: ilk ekran <strong>12,2 saniye</strong>, diğerleri <strong>3,6 saniye</strong>. Tam akışta ekranlar 1,5 sn bekleyip sırayla geçer; telefondaki <strong>Devam et</strong> beklemeden geçirir.</p>
     </header>
 
     <div class="modes">
@@ -131,7 +135,6 @@
         <input type="radio" name="speed" id="sp-05" value="0.5"><label for="sp-05">0,5×</label>
         <input type="radio" name="speed" id="sp-025" value="0.25"><label for="sp-025">0,25×</label>
       </div>
-      <label class="check"><input type="checkbox" id="loop" checked> Döngü</label>
     </div>
 
     <section aria-labelledby="h-seq">
@@ -153,7 +156,7 @@
       <section aria-labelledby="h-src">
         <h2 id="h-src">Kurgu</h2>
         <ul class="list">
-          <li><span>01 Aidiyet</span><span class="src">düğüm → halka</span></li>
+          <li><span>01 Aidiyet</span><span class="src">küre → rota</span></li>
           <li><span>02 Tavsiye</span><span class="src">soru → yanıt</span></li>
           <li><span>03 Kişisel akış</span><span class="src">yığın → sütun</span></li>
           <li><span>04 Erişim</span><span class="src">kart → dalga</span></li>
@@ -172,10 +175,11 @@
       </section>
     </div>
 
-    <p class="note">Sahnelerde karakter illüstrasyonu yok; kurgu düğüm, kart ve çizgiyle anlatılıyor. Palet açılış akışıyla birebir aynı, koyu temada da doğru çalışır. Boşluk tuşu oynatır ve durdurur, ← → sahne değiştirir.</p>
+    <p class="note">İlk ekranda gerçek portreler ve ikondaki uçak kullanılıyor; diğer sahnelerde kurgu düğüm, kart ve çizgiyle anlatılıyor. Palet açılış akışıyla birebir aynı, koyu temada da doğru çalışır. Boşluk tuşu oynatır ve durdurur, ← → sahne değiştirir. Bitmiş bir ekranda Oynat, o ekranı baştan başlatır.</p>
   </div>
 </main>
 
+<script src="/tanitim/assets/d3.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

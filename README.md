@@ -20,7 +20,7 @@ Ardından http://127.0.0.1:4173 adresini aç.
 | `/` | Pano | Üç akışın listesi, sahnelere derin bağlantılar |
 | `/splash/` | Açılış akışı | Avrupa Cepte splash → sponsor splash → ana ekran, 4,6 sn |
 | `/tanitim/` | Tanıtım akışı | Görünür ol, topluluğuna ulaş, sesini duyur, 3X büyüme; 4 sahne, 30 sn |
-| `/onboarding/` | Onboarding akışı | Aidiyet, tavsiye, kişisel akış, erişim; 4 ekran, sahne başına 3,6 sn |
+| `/onboarding/` | Onboarding akışı | Aidiyet, tavsiye, kişisel akış, erişim; ilk ekran 12,2 sn, diğerleri 3,6 sn |
 
 Üçü de 393 × 852 çerçevede çalışır. Pano, açılış ve onboarding koyu temayı
 destekler.
