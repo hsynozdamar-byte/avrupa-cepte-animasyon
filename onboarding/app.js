@@ -224,7 +224,7 @@ function scene1() {
   /* markanın sayfa hapları: topluluğun konu başlıkları */
   const pages = [
     { e: pagePill(null, 'schengen', '✈️'), x: 76, y: 148 },
-    { e: pagePill(null, 'haber', '📰'), x: 318, y: 398 }
+    { e: pagePill('avrupa', 'avrupa'), x: 316, y: 398 }
   ];
   pages.forEach(p => g.appendChild(p.e));
 
