@@ -66,108 +66,179 @@ function skelCard(w, h, lines, r) {
 }
 
 /* ═══════════ 01 · Aidiyet ═══════════ */
+/* Topluluk baloncukları: gerçek fotoğraf, beyaz halka, altında ülke rozeti.
+   Dil tanıtım akışından geliyor; orada da daire içinde fotoğraf + bayraklı
+   hap kullanılıyor. Fotoğraf havuzu şimdilik iki portre, bu yüzden yer
+   görselleriyle karıştırılıyor. */
+const AST = '/assets/';
+
+function bubble(id, r, img, opts) {
+  opts = opts || {};
+  const g = G([]);
+  const cid = `bc${id}`;
+  g.appendChild(S('defs', null,
+    S('clipPath', { id: cid }, S('circle', { cx: 0, cy: 0, r: r }))));
+  /* yumuşak taban gölgesi */
+  g.appendChild(S('ellipse', { cx: 0, cy: r * .96, rx: r * .82, ry: r * .2, fill: '#0B1B3A', opacity: .10 }));
+  g.appendChild(S('circle', { class: 'card-soft', cx: 0, cy: 0, r: r }));
+  g.appendChild(S('image', {
+    href: AST + img, x: -r, y: -r, width: r * 2, height: r * 2,
+    preserveAspectRatio: 'xMidYMid slice', 'clip-path': `url(#${cid})`,
+    transform: opts.flip ? `scale(-1 1)` : null
+  }));
+  /* cam parlaması: sol üstten gelen ışık */
+  g.appendChild(S('path', {
+    d: `M0 ${-r} A${r} ${r} 0 0 0 ${-r * .72} ${r * .69} A${r * 1.25} ${r * 1.25} 0 0 1 0 ${-r} Z`,
+    fill: '#fff', opacity: .16
+  }));
+  g.appendChild(S('circle', { cx: 0, cy: 0, r: r, fill: 'none', stroke: '#fff', 'stroke-width': r > 24 ? 3 : 2.4 }));
+  g.appendChild(S('circle', { cx: 0, cy: 0, r: r + (r > 24 ? 1.5 : 1.2), fill: 'none', stroke: '#0B1B3A', 'stroke-width': 1, opacity: .07 }));
+  return g;
+}
+
+/* Bayraklı ülke rozeti: dairesel bayrak + şehir/ülke adı */
+function flagBadge(flag, label) {
+  const fs = 10.5;
+  const w = label.length * fs * .56 + 30, h = 21;
+  const cid = `fb${flagBadge.n = (flagBadge.n || 0) + 1}`;
+  return G([
+    S('rect', { x: -w / 2, y: -h / 2, width: w, height: h, rx: h / 2, fill: '#fff' }),
+    S('rect', { x: -w / 2, y: -h / 2, width: w, height: h, rx: h / 2, fill: 'none', stroke: '#DDE4F1', 'stroke-width': 1 }),
+    S('defs', null, S('clipPath', { id: cid }, S('circle', { cx: -w / 2 + 12, cy: 0, r: 6.6 }))),
+    S('image', {
+      href: `${AST}flags/${flag}.svg`, x: -w / 2 + 5.4, y: -6.6, width: 13.2, height: 13.2,
+      'clip-path': `url(#${cid})`
+    }),
+    S('circle', { cx: -w / 2 + 12, cy: 0, r: 6.6, fill: 'none', stroke: '#0B1B3A', 'stroke-width': .9, opacity: .12 }),
+    txt(label, { class: 't-ink', x: -w / 2 + 22, y: 3.7, 'font-size': fs })
+  ]);
+}
+
 function scene1() {
   const g = G([]);
-  const R = 104, N = 8;
-  const rand = rnd(7);
-  const ring = G([]);
-  const links = G([]);
+  const links = G([], { fill: 'none' });
   g.appendChild(links);
-  g.appendChild(ring);
 
-  const pts = [];
-  for (let i = 0; i < N; i++) {
-    const a = -Math.PI / 2 + i * (Math.PI * 2 / N);
-    const x = CX + Math.cos(a) * R, y = CY + Math.sin(a) * R * .84;
-    const sx = CX + Math.cos(a) * R * (1.44 + rand() * .34) + (rand() - .5) * 44;
-    const sy = CY + Math.sin(a) * R * (1.30 + rand() * .32) + (rand() - .5) * 38;
-    const e = node(7);
-    ring.appendChild(e);
-    const trail = S('path', { class: 'ln-faint', d: `M${sx.toFixed(1)} ${sy.toFixed(1)} Q${((sx + x) / 2).toFixed(1)} ${((sy + y) / 2 - 26).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`, pathLength: 1 });
-    links.appendChild(trail);
-    pts.push({ e, x, y, sx, sy, trail, ph: i / N });
-  }
+  const CX1 = 196.5, CY1 = 266;
 
-  /* komşu bağlar: halkayı kuran yay dizisi */
-  const chords = [];
-  for (let i = 0; i < N; i++) {
-    const a = pts[i], b = pts[(i + 1) % N];
-    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-    const d = `M${a.x.toFixed(1)} ${a.y.toFixed(1)} Q${lerp(mx, CX, .30).toFixed(1)} ${lerp(my, CY, .30).toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
-    const e = S('path', { class: 'ln', d: d, pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 });
-    links.appendChild(e);
-    chords.push(e);
-  }
-  /* merkezden üç kısa bağ: "senin tanıdıkların" */
-  const spokes = [1, 4, 6].map(i => {
-    const p = pts[i];
+  /* Dış halka. Fotoğraflı olanlar insanları, manzaralılar yerleri temsil eder. */
+  const ring = [
+    { x: 196, y: 162, r: 31, img: 'people/kadin-1.jpg', flag: 'almanya', label: 'Berlin' },
+    { x: 303, y: 213, r: 26, img: 'people/erkek-1.jpg', flag: 'hollanda', label: 'Rotterdam' },
+    { x: 309, y: 316, r: 23, img: 'places/alpler.jpg', flag: 'avusturya', label: 'Viyana' },
+    { x: 196, y: 368, r: 27, img: 'people/erkek-1.jpg', flip: true, flag: 'fransa', label: 'Lyon' },
+    { x: 86, y: 318, r: 24, img: 'people/kadin-1.jpg', flip: true, flag: 'ispanya', label: 'Madrid' },
+    { x: 92, y: 212, r: 22, img: 'places/kampus.jpg', flag: 'isvec', label: 'Lund' }
+  ];
+
+  /* merkez: sen */
+  const me = G([
+    S('circle', { class: 'nd-halo', cx: 0, cy: 0, r: 52 }),
+    S('ellipse', { cx: 0, cy: 34, rx: 28, ry: 7, fill: '#0B1B3A', opacity: .10 }),
+    S('circle', { class: 'nd', cx: 0, cy: 0, r: 34 }),
+    S('path', {
+      d: 'M0 -12 a10 10 0 1 1 0 .01 M-17 20 c2.4-10.6 9-17 17-17 s14.6 6.4 17 17 z',
+      fill: '#fff'
+    }),
+    S('circle', { cx: 0, cy: 0, r: 34, fill: 'none', stroke: '#fff', 'stroke-width': 3 })
+  ]);
+  const meTag = flagBadge('turkiye', 'Sen');
+
+  /* bağ çizgileri: merkezden her üyeye, ayrıca komşular arası iki yay */
+  const spokes = ring.map(m => {
     const e = S('path', {
-      class: 'ln', d: `M${CX} ${CY} L${p.x.toFixed(1)} ${p.y.toFixed(1)}`,
+      class: 'ln', d: `M${CX1} ${CY1} L${m.x} ${m.y}`,
+      pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1
+    });
+    links.appendChild(e);
+    return e;
+  });
+  const chords = [[0, 1], [1, 2], [3, 4], [4, 5]].map(p => {
+    const a = ring[p[0]], b = ring[p[1]];
+    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    const e = S('path', {
+      class: 'ln',
+      d: `M${a.x} ${a.y} Q${lerp(mx, CX1, .22).toFixed(1)} ${lerp(my, CY1, .22).toFixed(1)} ${b.x} ${b.y}`,
       pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1
     });
     links.appendChild(e);
     return e;
   });
 
-  /* merkez: sen */
-  const me = G([
-    S('circle', { class: 'nd-halo', cx: 0, cy: 0, r: 30 }),
-    S('circle', { class: 'nd', cx: 0, cy: 0, r: 13 }),
-    S('circle', { cx: 0, cy: 0, r: 5.4, fill: '#fff' })
-  ]);
-  g.appendChild(me);
+  /* nabız noktaları: bağın canlı olduğunu gösterir */
+  const pulses = spokes.map(() => {
+    const e = S('circle', { class: 'nd', cx: CX1, cy: CY1, r: 3.2, opacity: 0 });
+    links.appendChild(e);
+    return { e, len: 0 };
+  });
 
-  /* şehir etiketleri */
-  const tags = [
-    { i: 1, e: pill('Berlin'), dx: 46, dy: -6 },
-    { i: 4, e: pill('Viyana'), dx: -50, dy: 10 },
-    { i: 6, e: pill('Rotterdam'), dx: -58, dy: -8 }
-  ];
-  tags.forEach(t2 => g.appendChild(t2.e));
+  const nodes = ring.map((m, i) => {
+    const b = bubble(i, m.r, m.img, { flip: m.flip });
+    const wrap = G([b]);
+    g.appendChild(wrap);
+    const badge = flagBadge(m.flag, m.label);
+    g.appendChild(badge);
+    /* dağılmış başlangıç konumu: merkezden dışarı doğru itilmiş */
+    const dx = m.x - CX1, dy = m.y - CY1;
+    const d = Math.hypot(dx, dy) || 1;
+    return {
+      m, wrap, badge,
+      sx: CX1 + dx / d * (d + 86) + (i % 2 ? 18 : -18),
+      sy: CY1 + dy / d * (d + 74),
+      ph: i / ring.length
+    };
+  });
+
+  g.appendChild(me);
+  g.appendChild(meTag);
 
   return { g, update(t) {
-    const env = envelope(t);
-    g.setAttribute('opacity', env.toFixed(3));
-    const spin = sn(t, SC) * 1.6;
-    ring.setAttribute('transform', `rotate(${spin.toFixed(2)} ${CX} ${CY})`);
-    links.setAttribute('transform', `rotate(${spin.toFixed(2)} ${CX} ${CY})`);
+    g.setAttribute('opacity', envelope(t).toFixed(3));
 
-    pts.forEach((p, i) => {
-      const a = i * .055;
-      const born = eOut(seg(t, a, a + .34));
-      const u = eOut4(seg(t, .42 + a, 1.58 + a));
-      const br = 1 + sn(t, 1.8, p.ph) * .06;
-      set(p.e, 'transform', tr(lerp(p.sx, p.x, u), lerp(p.sy, p.y, u), born * br));
-      set(p.e, 'opacity', (born * lerp(.45, 1, u)).toFixed(3));
-      set(p.trail, 'stroke-dasharray', 1);
-      set(p.trail, 'stroke-dashoffset', (1 - u).toFixed(4));
-      set(p.trail, 'opacity', ((1 - seg(t, 1.5, 2.2)) * .2).toFixed(3));
+    nodes.forEach((n, i) => {
+      const a = i * .07;
+      const born = eOut(seg(t, a, a + .30));
+      const u = eOut4(seg(t, .30 + a, 1.45 + a));
+      const float = sn(t, 2.4, n.ph) * 3.4;
+      const x = lerp(n.sx, n.m.x, u);
+      const y = lerp(n.sy, n.m.y, u) + float;
+      set(n.wrap, 'transform', tr(x, y, born * lerp(.72, 1, u)));
+      set(n.wrap, 'opacity', born.toFixed(3));
+
+      /* rozet baloncuğun altına, yerine oturduktan sonra iner */
+      const bu = eBack(seg(t, 1.35 + i * .10, 2.0 + i * .10));
+      set(n.badge, 'transform', tr(x, y + n.m.r + 15, clamp(bu)));
+      set(n.badge, 'opacity', clamp(seg(t, 1.35 + i * .10, 1.62 + i * .10)).toFixed(3));
+    });
+
+    spokes.forEach((s, i) => {
+      const a = 1.05 + i * .06;
+      const d = eOut(seg(t, a, a + .5));
+      set(s, 'stroke-dashoffset', (1 - d).toFixed(4));
+      set(s, 'opacity', (d * .45).toFixed(3));
+      const p = pulses[i];
+      if (!p.len) p.len = s.getTotalLength();
+      const pu = ((t / 1.8 + i * .16) % 1);
+      if (p.len && d > .9) {
+        const pt = s.getPointAtLength(p.len * pu);
+        set(p.e, 'cx', pt.x.toFixed(2)); set(p.e, 'cy', pt.y.toFixed(2));
+        set(p.e, 'opacity', (Math.sin(pu * Math.PI) * .9).toFixed(3));
+      } else set(p.e, 'opacity', 0);
     });
 
     chords.forEach((c, i) => {
-      const a = 1.52 + i * .052;
+      const a = 1.5 + i * .09;
       const d = eOut(seg(t, a, a + .55));
       set(c, 'stroke-dashoffset', (1 - d).toFixed(4));
-      set(c, 'opacity', (d * .62).toFixed(3));
+      set(c, 'opacity', (d * .3).toFixed(3));
     });
 
-    const mu = eBack(seg(t, 2.25, 2.9));
-    set(me, 'transform', tr(CX, CY, clamp(mu) * (1 + sn(t, 1.8, .3) * .035)));
-    set(me, 'opacity', clamp(seg(t, 2.25, 2.55)).toFixed(3));
-
-    spokes.forEach((sp, i) => {
-      const d = eOut(seg(t, 2.6 + i * .09, 3.15 + i * .09));
-      set(sp, 'stroke-dashoffset', (1 - d).toFixed(4));
-      set(sp, 'opacity', (d * .5).toFixed(3));
-    });
-
-    tags.forEach((t2, k) => {
-      const a = 2.55 + k * .16;
-      const u = eOut(seg(t, a, a + .55));
-      const p = pts[t2.i];
-      set(t2.e, 'transform', tr(p.x + t2.dx * u, p.y + t2.dy, lerp(.85, 1, u)));
-      set(t2.e, 'opacity', u.toFixed(3));
-    });
+    const mu = eBack(seg(t, .05, .75));
+    set(me, 'transform', tr(CX1, CY1, clamp(mu) * (1 + sn(t, 2.4, .3) * .02)));
+    set(me, 'opacity', clamp(seg(t, .05, .32)).toFixed(3));
+    const mt = eBack(seg(t, .55, 1.15));
+    set(meTag, 'transform', tr(CX1, CY1 + 50, clamp(mt)));
+    set(meTag, 'opacity', clamp(seg(t, .55, .78)).toFixed(3));
   } };
 }
 
@@ -407,7 +478,7 @@ const COPY = [
     head: 'Avrupa’nın her yerinde bir tanıdığın var',
     sub: 'Avrupa’da yaşayanlar ve gitmeyi planlayanlar için tek topluluk.',
     cta: 'Devam et',
-    rows: [['Dağınık düğümler', 0, .6], ['Halkaya toplanma', .42, 1.7], ['Bağ çizgileri', 1.52, 2.6], ['Şehir etiketleri', 2.3, 3.3]]
+    rows: [['Merkez · sen', .05, .75], ['Baloncuklar iner', 0, 1.6], ['Bağ çizgileri', 1.05, 2.05], ['Ülke rozetleri', 1.35, 2.15]]
   },
   {
     head: 'Sor, paylaş, tavsiye al',
@@ -430,7 +501,7 @@ const COPY = [
 ];
 const NOTES = {
   full: 'Dört ekran arka arkaya oynar: buluşma, tavsiye, kişisel akış, erişim. Toplam 14,4 sn.',
-  1: 'Dağınık düğümler bir halkada buluşur, aralarında bağ çizgileri kurulur, merkezde sen kalırsın.',
+  1: 'Tanıdıkların Avrupa’nın dört bir yanından gelip çevrende halka olur; her birinin altında bulunduğu ülke rozeti belirir.',
   2: 'Soru kartı ortada durur; topluluk düğümlerinden gelen tavsiyeler kartın altına yığılır.',
   3: 'Altı başlıktan üçü seçilip tek sütuna iner, kalanlar arkaya çekilir; etiketler yerine oturur.',
   4: 'Hizmet kartı yayına girer; dalgalar topluluğa yayıldıkça düğümler ve sayaç büyür.'
