@@ -1,0 +1,339 @@
+/* Avrupa Cepte · animasyon panosu tasarım sistemi
+   Kaynak: açılış akışı sayfası. Panel, cihaz çerçevesi, zaman çizelgesi ve
+   tipografi tüm sayfalarda birebir aynı kalır. */
+
+:root {
+  --bg: #F3F5F9;
+  --surface: #FFFFFF;
+  --ink: #0B0D12;
+  --muted: #646B7D;
+  --line: #DEE3EC;
+  --bar: #D5DCE9;
+  --bar-on: #0055FF;
+  --accent: #0055FF;
+  --accent-ink: #FFFFFF;
+  --shadow: 0 40px 80px -40px rgba(0, 40, 120, .35);
+  --lw: 11rem;
+
+  --brand: #0055FF;
+  --brand-mid: #518EF8;
+  --tint: #E8F0FF;
+  --bezel: #0B0D12;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0C12;
+    --surface: #12151D;
+    --ink: #ECEFF5;
+    --muted: #9097A8;
+    --line: #232836;
+    --bar: #2A3040;
+    --bar-on: #4D8BFF;
+    --accent: #4D8BFF;
+    --accent-ink: #0A0C12;
+    --shadow: 0 40px 80px -30px rgba(0, 0, 0, .8);
+    --bezel: #000000;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A0C12;
+  --surface: #12151D;
+  --ink: #ECEFF5;
+  --muted: #9097A8;
+  --line: #232836;
+  --bar: #2A3040;
+  --bar-on: #4D8BFF;
+  --accent: #4D8BFF;
+  --accent-ink: #0A0C12;
+  --shadow: 0 40px 80px -30px rgba(0, 0, 0, .8);
+  --bezel: #000000;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Figtree", -apple-system, "SF Pro Text", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+a { color: inherit; }
+
+/* ---------- üst navigasyon ---------- */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 60px;
+  padding-inline: 24px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.tn-brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 14px; font-weight: 600; text-decoration: none; color: var(--ink);
+  white-space: nowrap;
+}
+.tn-mark {
+  width: 26px; height: 26px; border-radius: 8px; flex: none;
+  background: var(--accent); color: #fff;
+  display: grid; place-items: center;
+  font-size: 12px; font-weight: 700; letter-spacing: -.05em;
+}
+.tn-sep { color: var(--line); }
+.tn-here { color: var(--muted); font-weight: 500; }
+.tn-links { display: flex; gap: 2px; }
+.tn-links a {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px; letter-spacing: .03em;
+  color: var(--muted); text-decoration: none;
+  padding: 7px 11px; border-radius: 9px;
+  transition: color .16s, background-color .16s;
+}
+.tn-links a:hover { color: var(--ink); background: var(--surface); }
+.tn-links a[aria-current="page"] {
+  color: var(--ink); background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+@media (max-width: 600px) {
+  .topnav { height: 52px; padding-inline: 14px; gap: 10px; }
+  .tn-sep, .tn-here { display: none; }
+  .tn-links a { padding: 6px 8px; font-size: 11px; }
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-inline: 24px;
+  padding-block: 44px 72px;
+  display: grid;
+  grid-template-columns: minmax(0, 344px) minmax(0, 1fr);
+  gap: 72px;
+  align-items: start;
+}
+
+/* ---------- cihaz ---------- */
+.phone {
+  width: 100%;
+  background: var(--bezel);
+  border-radius: 54px;
+  padding: 12px;
+  box-shadow:
+    var(--shadow),
+    inset 0 0 0 1.5px rgba(255, 255, 255, .13);
+  position: sticky;
+  top: 92px;
+}
+/* yan tuşlar: sessize alma/ses solda, güç sağda */
+.phone::before, .phone::after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  background: var(--bezel);
+  pointer-events: none;
+}
+.phone::before {
+  left: -3px; top: 21%; height: 16%;
+  border-radius: 3px 0 0 3px;
+}
+.phone::after {
+  right: -3px; top: 27%; height: 11%;
+  border-radius: 0 3px 3px 0;
+}
+.screen {
+  position: relative;
+  aspect-ratio: 393 / 852;
+  max-width: 100%;
+  border-radius: 42px;
+  overflow: hidden;
+  background: #FFFFFF;
+}
+/* Dynamic Island: yüzde ölçülü, ekranla birlikte ölçeklenir */
+.screen::after {
+  content: '';
+  position: absolute;
+  z-index: 30;
+  left: 34.2%;
+  width: 31.6%;
+  top: 1.6%;
+  aspect-ratio: 124 / 36;
+  border-radius: 999px;
+  background: #0B0D12;
+  pointer-events: none;
+}
+.stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 393px;
+  height: 852px;
+  transform-origin: 0 0;
+}
+.stage > * { position: absolute; }
+.status { left: 0; top: 0; width: 393px; height: 54px; }
+
+/* ---------- panel ---------- */
+.panel { display: flex; flex-direction: column; gap: 40px; min-width: 0; }
+.panel-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 9px; padding: 8px 12px; margin: 0 0 18px;
+  color: var(--muted); font-size: 12px; font-weight: 600;
+  text-decoration: none; align-self: flex-start;
+  transition: border-color .18s, color .18s;
+}
+.panel-link:hover { border-color: var(--accent); color: var(--ink); }
+
+.eyebrow {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+h1 {
+  font-weight: 700;
+  font-size: clamp(2.4rem, 5vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin: 0 0 18px;
+  text-wrap: balance;
+}
+.lead { margin: 0; max-width: 60ch; color: var(--muted); font-size: 16px; }
+.lead strong { color: var(--ink); font-weight: 600; }
+.chain {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 6px 8px; margin: 0 0 18px; padding: 0;
+  list-style: none; font-weight: 600; font-size: 14px;
+}
+.chain li { display: inline-flex; align-items: center; gap: 8px; }
+.chain li + li::before { content: "→"; color: var(--accent); font-weight: 500; }
+
+h2 {
+  font-size: 12px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 16px;
+}
+
+.modes { display: flex; flex-direction: column; gap: 12px; }
+.modes .seg { align-self: flex-start; max-width: 100%; flex-wrap: wrap; }
+.modes .seg label { font-family: inherit; font-size: 14px; font-weight: 600; padding: 0 16px; height: 42px; }
+.mode-note { margin: 0; color: var(--muted); font-size: 14px; max-width: 60ch; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.btn {
+  height: 42px; padding: 0 20px; border-radius: 14px;
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--ink); font: inherit; font-weight: 600; cursor: pointer;
+}
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); min-width: 112px; }
+.btn:focus-visible, .seg input:focus-visible + label, .check input:focus-visible, .scrub:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.seg {
+  display: inline-flex; border: 1px solid var(--line);
+  border-radius: 14px; overflow: hidden; background: var(--surface);
+}
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label {
+  height: 40px; display: grid; place-items: center; padding: 0 14px; cursor: pointer;
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 13px; color: var(--muted);
+}
+.seg label + input + label { border-left: 1px solid var(--line); }
+.seg input:checked + label { background: var(--ink); color: var(--bg); }
+/* buton tabanlı segment (tanıtım akışı sahne seçici) */
+.seg .seg-btn {
+  height: 40px; padding: 0 15px;
+  background: transparent; border: 0; border-left: 1px solid var(--line);
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 13px; color: var(--muted); cursor: pointer;
+  display: grid; place-items: center;
+}
+.seg .seg-btn:first-child { border-left: 0; }
+.seg .seg-btn:hover { color: var(--ink); }
+.seg .seg-btn.selected { background: var(--ink); color: var(--bg); }
+.seg .seg-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; padding-inline: 4px; }
+.check input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
+
+/* ---------- zaman çizelgesi ---------- */
+.tl { position: relative; }
+.tl-row, .tl-axis {
+  display: grid; grid-template-columns: var(--lw) minmax(0, 1fr);
+  gap: 16px; align-items: center;
+}
+.tl-row { min-height: 46px; border-top: 1px solid var(--line); }
+.tl-label { display: flex; flex-direction: column; line-height: 1.25; padding-block: 6px; }
+.tl-label b { font-weight: 500; font-size: 14px; }
+.tl-label small {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.track { position: relative; height: 12px; margin-inline: 7px; }
+.bar {
+  position: absolute; top: 0; bottom: 0; border-radius: 4px;
+  background: var(--bar); transition: background-color .12s;
+}
+.bar.on { background: var(--bar-on); }
+.tl-axis { border-top: 1px solid var(--line); padding-top: 12px; align-items: start; }
+.timecode {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.1;
+}
+.timecode small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 3px; }
+.scrub {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 22px;
+  margin: 0; background: transparent; cursor: pointer; border-radius: 4px;
+}
+.scrub::-webkit-slider-runnable-track { height: 2px; background: var(--line); }
+.scrub::-moz-range-track { height: 2px; background: var(--line); }
+.scrub::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px; margin-top: -6px;
+  border-radius: 50%; background: var(--ink); border: 0;
+}
+.scrub::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--ink); border: 0; }
+.ticks { position: relative; height: 18px; margin-inline: 7px; margin-top: 2px; }
+.ticks span {
+  position: absolute; transform: translateX(-50%);
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.head {
+  position: absolute; top: 0; bottom: 40px;
+  left: calc(var(--lw) + 16px + 7px); right: 7px; pointer-events: none;
+}
+.head i { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--ink); }
+
+/* ---------- kaynaklar + renkler ---------- */
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+.list { margin: 0; padding: 0; list-style: none; }
+.list li {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 16px; padding-block: 9px; border-top: 1px solid var(--line); font-size: 14px;
+}
+.list code, .list .src {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px; color: var(--muted); white-space: nowrap;
+}
+.sw { display: inline-flex; align-items: center; gap: 10px; }
+.chip { width: 18px; height: 18px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(127, 135, 160, .35); flex: none; }
+
+.note { margin: 0; font-size: 13px; color: var(--muted); max-width: 64ch; padding-top: 20px; border-top: 1px solid var(--line); }
+
+@media (max-width: 860px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 44px; padding-inline: 16px; padding-block: 28px 56px; }
+  .phone { position: static; width: min(300px, 100%); margin-inline: auto; border-radius: 46px; padding: 9px; }
+  .screen { border-radius: 38px; }
+}
+@media (max-width: 520px) {
+  :root { --lw: 8.25rem; }
+  .tl-label b { font-size: 13px; }
+  .facts { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+}

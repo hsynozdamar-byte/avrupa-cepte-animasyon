@@ -1,95 +1,157 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f5f6f8">
-  <title>Avrupa Cepte · Tanıtım akışı</title>
-  <link rel="stylesheet" href="assets/font.css">
-  <link rel="stylesheet" href="styles-v0.css">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avrupa Cepte · Animasyonlar</title>
+<meta name="description" content="Avrupa Cepte hareket çalışmaları tek panoda: açılış akışı, tanıtım akışı, onboarding akışı.">
+<link rel="icon" href="assets/icon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="system.css">
+<style>
+  .hub {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-inline: 24px;
+    padding-block: 52px 96px;
+  }
+  .hub header { max-width: 60ch; margin-bottom: 64px; }
+
+  .flow {
+    display: grid;
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+    gap: 16px 56px;
+    align-items: start;
+    padding-block: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .flow-head h3 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -.03em;
+    line-height: 1.1;
+  }
+  .flow-head .num {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 12px;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 10px;
+  }
+  .flow-head p { margin: 0 0 16px; color: var(--muted); font-size: 14px; max-width: 42ch; }
+  .flow-head .meta {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 11px; color: var(--muted); display: block; margin-top: 14px;
+  }
+
+  .open {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 42px; padding: 0 22px; border-radius: 14px;
+    background: var(--accent); color: var(--accent-ink);
+    font-weight: 600; font-size: 15px; text-decoration: none;
+  }
+  .open:hover { filter: brightness(1.06); }
+
+  .scenes { margin: 0; padding: 0; list-style: none; }
+  .scenes li { border-top: 1px solid var(--line); }
+  .scenes li:first-child { border-top: 0; }
+  .scenes a {
+    display: flex; align-items: baseline; gap: 16px;
+    padding-block: 11px; text-decoration: none; color: var(--ink);
+    font-size: 15px; font-weight: 500;
+  }
+  .scenes a:hover { color: var(--accent); }
+  .scenes .idx {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 12px; color: var(--muted); flex: none; width: 24px;
+  }
+  .scenes a:hover .idx { color: var(--accent); }
+  .scenes .arr { margin-left: auto; color: var(--muted); font-size: 13px; }
+  .scenes a:hover .arr { color: var(--accent); }
+
+  @media (max-width: 760px) {
+    .hub { padding-block: 40px 64px; padding-inline: 16px; }
+    .hub header { margin-bottom: 40px; }
+    .flow { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-block: 28px; }
+  }
+</style>
 </head>
 <body>
-<header class="studio-header">
-  <a class="brand" href="./">
-    <span class="brand-mark">a<span>c</span></span>
-    <strong>Avrupa Cepte</strong>
-    <span class="header-divider"></span>
-    <span class="header-caption">Tanıtım akışı</span>
+
+<nav class="topnav">
+  <a class="tn-brand" href="/">
+    <span class="tn-mark">ac</span>
+    <span>Avrupa Cepte</span>
+    <span class="tn-sep">/</span>
+    <span class="tn-here">Pano</span>
   </a>
-  <div class="header-right">
-    <button id="return-single" style="display:none;">Tek sahneye dön ↙</button>
-    <span class="preview-tag"><i></i> Hareket önizlemesi</span>
-    <a href="https://www.figma.com/design/P1pFVExX502FQrV6nCLTjJ/Avrupa-Cepte?node-id=2980-82597&t=2pFAzzNfoVad6KgR-4" target="_blank" rel="noreferrer">Figma ↗</a>
+  <div class="tn-links">
+    <a href="/" aria-current="page">Pano</a>
+    <a href="/splash/">Açılış</a>
+    <a href="/tanitim/">Tanıtım</a>
+    <a href="/onboarding/">Onboarding</a>
   </div>
-</header>
-<main class="workspace">
-  <aside class="director" id="director-sidebar">
-    <div class="eyebrow">TANITIM · 01—04</div>
-    <h1 id="director-heading">Bir paylaşımla<br>başlar.</h1>
-    <p class="intro" id="director-desc">Görünür ol. Bağ kur.<br>Sesini Avrupa’ya duyur.</p>
-    <nav class="scene-picker" aria-label="Sahneler">
-      <button class="scene-tab selected" data-scene="0">
-        <span class="step">01</span>
-        <span><strong>Görünür ol</strong><small>Açılış · sıralı baloncuklar</small></span>
-        <span class="tab-arrow">↗</span>
-      </button>
-      <button class="scene-tab" data-scene="1">
-        <span class="step">02</span>
-        <span><strong>Topluluğuna ulaş</strong><small>Gönderi → ayrık ağ geçişi</small></span>
-        <span class="tab-arrow">↗</span>
-      </button>
-      <button class="scene-tab" data-scene="2">
-        <span class="step">03</span>
-        <span><strong>Sesini duyur</strong><small>Yayılım · başarı grafiği</small></span>
-        <span class="tab-arrow">↗</span>
-      </button>
-      <button class="scene-tab" data-scene="3">
-        <span class="step">04</span>
-        <span><strong>3X Büyüme</strong><small>Premium modal · harita animasyonu</small></span>
-        <span class="tab-arrow">↗</span>
-      </button>
-    </nav>
-    <div class="view-options">
-      <button id="view-toggle" aria-pressed="false">Tüm sahneleri birlikte gör <span>↔</span></button>
-    </div>
-    <p class="keyboard-tip">← → sahne değiştir <span>·</span> boşluk duraklat</p>
-  </aside>
+</nav>
 
-  <section class="preview-area" aria-label="Animasyon önizlemesi">
-    <div class="phones" id="phones"></div>
-    <div class="transport">
-      <button class="icon-button" id="play" aria-label="Duraklat">II</button>
-      <button class="icon-button replay" id="replay" aria-label="Baştan oynat">↺</button>
-      <div class="timeline">
-        <label class="sr-only" for="scrubber">Sahne zamanı</label>
-        <input id="scrubber" type="range" min="0" max="1000" value="0">
-        <span id="time">00.0 / 05.0</span>
-      </div>
-      <label class="sr-only" for="speed">Oynatma hızı</label>
-      <select id="speed">
-        <option value="0.5">0,5×</option>
-        <option value="1" selected>1×</option>
-        <option value="1.5">1,5×</option>
-      </select>
-      <button id="auto" class="auto-button" aria-pressed="false">Otomatik <i></i></button>
-    </div>
-    <div class="preview-caption">
-      <span id="caption">01 / 04</span>
-      <span>393 × 852 <span class="caption-dot">·</span> Canlı HTML</span>
-    </div>
-  </section>
+<main class="hub">
+  <header>
+    <p class="eyebrow">Avrupa Cepte · animasyon panosu</p>
+    <h1>Animasyonlar</h1>
+    <p class="lead">Açılış, tanıtım ve onboarding akışlarının tamamı burada. Hepsi <strong>canlı HTML</strong> olarak oynar, video dosyası yoktur; her akışı yavaşlatabilir, baştan oynatabilir, tek tek sahnelerine gidebilirsin.</p>
+  </header>
 
-  <aside class="motion-note" id="motion-note-sidebar">
-    <span class="eyebrow">SAHNENİN HİSSİ</span>
-    <h2 id="note-title">Dikkat, doğalca<br>üzerinde.</h2>
-    <p id="note-text">Paylaşım merkezden büyüyerek açılır; ardından baloncuklar sırayla belirir.</p>
-    <div class="note-rule"></div>
-    <span class="note-bottom">Tasarımın ritminde.<br>Kesintisiz, yumuşak hareket.</span>
-  </aside>
+  <article class="flow">
+    <div class="flow-head">
+      <span class="num">01</span>
+      <h3>Açılış akışı</h3>
+      <p>Uygulama açılırken iki splash peş peşe oynar, ardından ana ekran gelir. Kâğıt uçak izleri app ikonuna dönüşür.</p>
+      <a class="open" href="splash/">Aç</a>
+      <span class="meta">3 mod · 4,6 sn</span>
+    </div>
+    <ul class="scenes">
+      <li><a href="splash/"><span class="idx">01</span> Tam akış <span class="arr">→</span></a></li>
+      <li><a href="splash/#m=ac"><span class="idx">02</span> Avrupa Cepte splash <span class="arr">→</span></a></li>
+      <li><a href="splash/#m=midas"><span class="idx">03</span> Sponsor splash <span class="arr">→</span></a></li>
+    </ul>
+  </article>
+
+  <article class="flow">
+    <div class="flow-head">
+      <span class="num">02</span>
+      <h3>Tanıtım akışı</h3>
+      <p>Görünürlükten büyümeye giden dört sahnelik ürün anlatısı: gönderi, topluluk ağı, yayılım ve premium.</p>
+      <a class="open" href="tanitim/">Aç</a>
+      <span class="meta">4 sahne · 30 sn</span>
+    </div>
+    <ul class="scenes">
+      <li><a href="tanitim/#s=1"><span class="idx">01</span> Görünür ol <span class="arr">→</span></a></li>
+      <li><a href="tanitim/#s=2"><span class="idx">02</span> Topluluğuna ulaş <span class="arr">→</span></a></li>
+      <li><a href="tanitim/#s=3"><span class="idx">03</span> Sesini duyur <span class="arr">→</span></a></li>
+      <li><a href="tanitim/#s=4"><span class="idx">04</span> 3X Büyüme <span class="arr">→</span></a></li>
+    </ul>
+  </article>
+
+  <article class="flow">
+    <div class="flow-head">
+      <span class="num">03</span>
+      <h3>Onboarding akışı</h3>
+      <p>Dört karşılama ekranı: buluşma, tavsiye alışverişi, kişisel akış ve işletme erişimi. Karakter yok, kurgu düğüm ve kartla anlatılıyor.</p>
+      <a class="open" href="onboarding/">Aç</a>
+      <span class="meta">4 sahne · 14,4 sn</span>
+    </div>
+    <ul class="scenes">
+      <li><a href="onboarding/"><span class="idx">00</span> Tam akış <span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=1"><span class="idx">01</span> Bir tanıdığın var <span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=2"><span class="idx">02</span> Sor, paylaş, tavsiye al <span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=3"><span class="idx">03</span> Gündemi takip et <span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=4"><span class="idx">04</span> Binlerce kişiye ulaş <span class="arr">→</span></a></li>
+    </ul>
+  </article>
+
+  <p class="note">Üçü de 393 × 852 çerçevede çalışır. Onboarding ve açılış akışı koyu temayı da destekler. Tanıtım akışı, taşındığı hâliyle korunmuştur.</p>
 </main>
-<div class="toast" role="status" aria-live="polite"></div>
-<script src="assets/d3.min.js"></script>
-<script src="app.js"></script>
 </body>
 </html>

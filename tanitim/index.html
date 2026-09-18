@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Avrupa Cepte · Tanıtım akışı</title>
+<meta name="description" content="Avrupa Cepte tanıtım akışı: görünürlükten büyümeye dört sahnelik ürün anlatısı.">
+<link rel="icon" href="../assets/icon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/font.css">
+<link rel="stylesheet" href="../system.css">
+<link rel="stylesheet" href="styles-v0.css">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="fit.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="tn-brand" href="/">
+    <span class="tn-mark">ac</span>
+    <span>Avrupa Cepte</span>
+    <span class="tn-sep">/</span>
+    <span class="tn-here">Tanıtım akışı</span>
+  </a>
+  <div class="tn-links">
+    <a href="/">Pano</a>
+    <a href="/splash/">Açılış</a>
+    <a href="/tanitim/" aria-current="page">Tanıtım</a>
+    <a href="/onboarding/">Onboarding</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="phone">
+    <div class="screen" id="screen">
+      <div class="stage" id="phones"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <header>
+      <p class="eyebrow">Tanıtım akışı · taslak 1</p>
+      <h1 id="director-heading">Bir paylaşımla<br>başlar.</h1>
+      <ul class="chain" aria-label="Akış">
+        <li>Görünür ol</li><li>Topluluğuna ulaş</li><li>Sesini duyur</li><li>3X Büyüme</li>
+      </ul>
+      <p class="lead" id="director-desc">Görünür ol. Bağ kur.<br>Sesini Avrupa’ya duyur.</p>
+    </header>
+
+    <div class="modes">
+      <div class="seg scene-picker" role="tablist" aria-label="Sahne">
+        <button class="seg-btn scene-tab selected" type="button" data-scene="0" role="tab">01</button>
+        <button class="seg-btn scene-tab" type="button" data-scene="1" role="tab">02</button>
+        <button class="seg-btn scene-tab" type="button" data-scene="2" role="tab">03</button>
+        <button class="seg-btn scene-tab" type="button" data-scene="3" role="tab">04</button>
+      </div>
+      <p class="mode-note" id="note-text">Paylaşım merkezden büyüyerek açılır; ardından baloncuklar sırayla belirir.</p>
+    </div>
+
+    <div class="controls">
+      <button class="btn primary" id="play" type="button" aria-pressed="true">Duraklat</button>
+      <button class="btn" id="replay" type="button">Baştan oynat</button>
+      <div class="seg" role="radiogroup" aria-label="Oynatma hızı">
+        <input type="radio" name="speed" id="sp-1" value="1" checked><label for="sp-1">1×</label>
+        <input type="radio" name="speed" id="sp-05" value="0.5"><label for="sp-05">0,5×</label>
+        <input type="radio" name="speed" id="sp-15" value="1.5"><label for="sp-15">1,5×</label>
+      </div>
+      <label class="check"><input type="checkbox" id="auto"> Otomatik geç</label>
+    </div>
+
+    <section aria-labelledby="h-seq">
+      <h2 id="h-seq">Sahne süresi</h2>
+      <div class="tl">
+        <div class="tl-axis">
+          <div class="timecode" id="time">0,0<small>saniye</small></div>
+          <div>
+            <input class="scrub" type="range" id="scrubber" min="0" max="1000" value="0" aria-label="Zaman">
+            <div class="ticks" id="ticks" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="facts">
+      <section aria-labelledby="h-sc">
+        <h2 id="h-sc">Sahneler</h2>
+        <ul class="list">
+          <li><span>01 Görünür ol</span><span class="src">5,0 sn</span></li>
+          <li><span>02 Topluluğuna ulaş</span><span class="src">5,0 sn</span></li>
+          <li><span>03 Sesini duyur</span><span class="src">10,0 sn</span></li>
+          <li><span>04 3X Büyüme</span><span class="src">10,0 sn</span></li>
+          <li><span>Ekran</span><span class="src">393 × 852</span></li>
+        </ul>
+      </section>
+      <section aria-labelledby="h-fe">
+        <h2 id="h-fe">Sahnenin hissi</h2>
+        <ul class="list">
+          <li><span id="note-title">Dikkat, doğalca üzerinde.</span></li>
+          <li><span>Kaynak</span><span class="src"><a href="https://www.figma.com/design/P1pFVExX502FQrV6nCLTjJ/Avrupa-Cepte?node-id=2980-82597&t=2pFAzzNfoVad6KgR-4" target="_blank" rel="noreferrer">Figma ↗</a></span></li>
+          <li><span class="sw"><span class="chip" style="background:#0055FF"></span>Marka mavisi</span><code>#0055FF</code></li>
+          <li><span class="sw"><span class="chip" style="background:#4959EA"></span>Premium</span><code>#4959EA</code></li>
+        </ul>
+      </section>
+    </div>
+
+    <p class="note">Bu akış, kapatılan <code>avrupa-cepte-animasyon</code> sitesinden birebir taşındı; sahne animasyonlarına dokunulmadı, yalnızca sayfa yapısı panonun tasarım sistemine getirildi. Boşluk tuşu oynatır ve durdurur, ← → sahne değiştirir.</p>
+  </div>
+</main>
+
+<div class="toast" role="status" aria-live="polite"></div>
+<script src="assets/d3.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -818,7 +818,7 @@ function render(t) {
   });
 
   $('#scrubber').value = time / curDur * 1000;
-  $('#time').textContent = `${time.toFixed(1).padStart(4, '0')} / ${curDur.toFixed(1).padStart(4, '0')}`;
+  $('#time').innerHTML = time.toFixed(1).replace('.', ',') + '<small>/ ' + curDur.toFixed(1).replace('.', ',') + ' saniye</small>';
 }
 
 function selectScene(i) {
@@ -839,13 +839,13 @@ function selectScene(i) {
   $('#director-desc').innerHTML = cur.sidebarDesc;
   $('#note-title').innerHTML = cur.noteTitle;
   $('#note-text').textContent = cur.note;
-  $('#caption').textContent = `0${active + 1} / 04`;
+  buildTicks(scenes[active].duration);
 
   render(0);
 
   if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
     phones[active].animate(
-      [{ opacity: 0, transform: `scale(var(--phone-scale)) translateY(12px)` }, { opacity: 1, transform: `scale(var(--phone-scale)) translateY(0)` }],
+      [{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'translateY(0)' }],
       { duration: 350, easing: 'cubic-bezier(.22,1,.36,1)' }
     );
     // Premium sheet sahneye alttan kayarak girer, avantaj kartları kademeli belirir.
@@ -867,24 +867,29 @@ function selectScene(i) {
 
 function setPlaying(v) {
   playing = v;
-  $('#play').textContent = v ? 'II' : '>';
-  $('#play').setAttribute('aria-label', v ? 'Duraklat' : 'Oynat');
+  $('#play').textContent = v ? 'Duraklat' : 'Oynat';
+  $('#play').setAttribute('aria-pressed', v);
 }
 
 function resize() {
-  const mob = innerWidth <= 650;
-  let s = Math.min(.94, (innerHeight - (mob ? 225 : 207)) / 852);
-  s = Math.max(mob ? .45 : .48, s);
-
-  if (all) {
-    const count = scenes.length; // 4
-    const av = innerWidth > 1100 ? innerWidth - 320 : innerWidth - 48;
-    s = Math.min(s, (av - (count - 1) * 16) / (393 * count));
-    s = Math.max(.36, s);
-  } else {
-    s = Math.min(s, (innerWidth - 36) / 393);
-  }
+  const w = $('#screen').clientWidth;
+  if (!w) return;
+  const s = w / 393;
+  $('#phones').style.transform = `scale(${s.toFixed(4)})`;
   document.documentElement.style.setProperty('--phone-scale', s.toFixed(4));
+}
+
+function buildTicks(dur) {
+  const box = $('#ticks');
+  if (!box) return;
+  box.textContent = '';
+  const step = dur > 6 ? 2 : 1;
+  for (let v = 0; v <= Math.floor(dur); v += step) {
+    const sp = document.createElement('span');
+    sp.style.left = (v / dur * 100) + '%';
+    sp.textContent = v;
+    box.appendChild(sp);
+  }
 }
 
 function toast(t) {
@@ -905,18 +910,9 @@ $('#scrubber').oninput = e => {
   const sc = +e.target.value / 1000 * scenes[active].duration;
   time = sc; motionTime = sc; sceneRealTime = sc; render(sc);
 };
-$('#speed').onchange = e => speed = +e.target.value;
-$('#auto').onclick = () => { auto = !auto; $('#auto').setAttribute('aria-pressed', auto); };
-$('#view-toggle').onclick = () => {
-  all = !all;
-  document.body.classList.toggle('all-view', all);
-  $('#view-toggle').setAttribute('aria-pressed', all);
-  $('#view-toggle').innerHTML = all ? 'Tek sahneye dön <span>↙</span>' : 'Tüm sahneleri birlikte gör <span>↔</span>';
-  document.querySelectorAll('.phone-wrap').forEach((e, i) => e.inert = !all && i !== active);
-  resize();
-  render(motionTime);
-};
-$('#return-single').onclick = () => $('#view-toggle').click();
+document.querySelectorAll('input[name=speed]').forEach(r =>
+  r.addEventListener('change', () => { speed = +r.value; }));
+$('#auto').addEventListener('change', e => { auto = e.target.checked; });
 
 addEventListener('resize', resize);
 addEventListener('keydown', e => {
@@ -928,7 +924,7 @@ addEventListener('keydown', e => {
 document.addEventListener('visibilitychange', () => last = 0);
 
 function tick(now) {
-  if (last && playing && !document.hidden) {
+  if (last && playing) {
     const dt = Math.min((now - last) / 1000, .05) * speed;
     time += dt; motionTime += dt; sceneRealTime += dt;
 
@@ -953,7 +949,7 @@ function tick(now) {
     }
   }
   last = now;
-  if (playing && !document.hidden) {
+  if (playing) {
     render(motionTime);
   }
   requestAnimationFrame(tick);
@@ -965,7 +961,13 @@ fetch(A + 'land.geojson')
   .catch(() => toast('Küre haritası yüklenemedi. Sayfayı yerel sunucu üzerinden aç.'));
 
 resize();
-selectScene(0);
+// Panelden derin bağlantı: /tanitim/#s=3 doğrudan 3. sahneyi açar.
+function sceneFromHash() {
+  const m = /(?:^|[#&])s=(\d)/.exec(location.hash);
+  return m ? Math.max(0, Math.min(3, +m[1] - 1)) : 0;
+}
+selectScene(sceneFromHash());
+addEventListener('hashchange', () => selectScene(sceneFromHash()));
 setPlaying(playing);
 render(0);
 requestAnimationFrame(tick);

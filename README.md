@@ -1,50 +1,64 @@
-# Avrupa Cepte — Tanıtım animasyonu
+# Avrupa Cepte — Animasyon panosu
 
-Figma `Promo Flow` section'ının ilk üç mobil ekranı için yerel HTML önizlemesi.
+Avrupa Cepte'nin hareket çalışmalarının tamamı tek yerde. Hepsi canlı HTML/SVG
+olarak oynar; video dosyası, derleme adımı ve paket kurulumu yoktur.
 
 ## Açma
 
-Bu klasörde çalıştır:
+Depo kökünde:
 
 ```sh
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-Ardından http://127.0.0.1:4173 adresini aç. Derleme ya da paket kurulumu gerekmez. Tüm görseller, fontlar, JavaScript ve harita verileri yereldedir.
+Ardından http://127.0.0.1:4173 adresini aç.
 
-## Sahneler
+## Akışlar
 
-1. **Görünür ol (hikaye):** Orijinal paylaşım kartı, ülke baloncukları ve erişim baloncukları. Hafif süzülme, ölçek değişimi ve kart hareketi.
-2. **Topluluğuna ulaş (hikaye):** Orijinal kişi, bayrak ve topluluk görselleri. Bağlantı uçları her karede baloncuklara bağlı kalır; çift yönlü ışıklar ve varış halkaları.
-3. **Sesini duyur (hikaye finali):** Avrupa'ya dönük küre; paylaşım kartından yayılan ışıklar, şehir bağlantıları, insan baloncukları ve ses dalgası. Bu sahnenin Figma'daki boş görsel alanı ve süre odaklı metni, istenen Avrupa'ya yayılma anlatısına göre yeniden kurgulandı.
-4. **3X Büyüme (premium teşviki):** Tanıtım sırasında açılan bottom-sheet. Gri alanda Avrupa haritası, 4 topluluk balonu, merkez AB hub ışıkları ve 3X büyüme grafiği canlanır.
+| Yol | Akış | İçerik |
+| --- | --- | --- |
+| `/` | Pano | Üç akışın listesi, sahnelere derin bağlantılar |
+| `/splash/` | Açılış akışı | Avrupa Cepte splash → sponsor splash → ana ekran, 4,6 sn |
+| `/tanitim/` | Tanıtım akışı | Görünür ol, topluluğuna ulaş, sesini duyur, 3X büyüme; 4 sahne, 30 sn |
+| `/onboarding/` | Onboarding akışı | Aidiyet, tavsiye, kişisel akış, erişim; 4 ekran, sahne başına 3,6 sn |
 
-## Akış
+Üçü de 393 × 852 çerçevede çalışır. Pano, açılış ve onboarding koyu temayı
+destekler.
 
-- **01—03 Hikaye (tanıtım öncesi):** Otomatik akar (01→02→03). 03'teki süre bitince hikaye finalinde bekler; “Tanıtım oluştur” premium sheet’ini açar.
-- **04 Premium teşviki (tanıtım sırasında):** “Tanıtım oluştur” CTA’sıyla, geri butonuyla veya soldaki “3X Büyüme” sekmesinden açılır. Geri/kapat/“1 sayfayla devam et” hikaye finaline (03) döndürür; “Premiuma geç” önizlemede yalnızca bilgi mesajı gösterir.
+## Tasarım sistemi
 
-Otomatik ilerleme `Otomatik` düğmesiyle açılıp kapatılır (varsayılan: açık). Klavye: sol/sağ ok = sahne değiştir; boşluk = oynat/duraklat.
+`system.css` ortak katman: renk değişkenleri, cihaz çerçevesi (Dynamic Island ve
+yan tuşlar dahil), üst navigasyon, panel tipografisi, zaman çizelgesi ve
+segment/buton bileşenleri. Üç sayfa da bunu kullanır, böylece cihaz her sayfada
+aynı konumda durur.
 
-Klavye: sol/sağ ok = sahne değiştir; boşluk = oynat/duraklat. Azaltılmış hareket tercihi varsa önizleme duraklatılmış başlar. Sekme görünmediğinde animasyon saati ilerlemez.
+## Klasörler
 
-## Dosyalar
+```
+index.html      pano
+system.css      ortak tasarım sistemi
+assets/         paylaşılan ikon, wordmark, durum çubuğu, Satoshi fontları
+splash/         açılış akışı (index.html + kendi assets/ klasörü)
+tanitim/        tanıtım akışı
+onboarding/     onboarding akışı (index.html + app.js)
+```
 
-- `index.html`: İnceleme arayüzü.
-- `styles.css`: Figma tipografisi, renkler, baloncuklar ve responsive görünüm.
-- `app.js`: Sahneler, hareket, bağlantılar, küre ve kontroller. Sahnelerin metin ve süre ayarları dosyanın başındaki `scenes` dizisinde.
-- `assets/`: Figma'dan indirilen orijinal görseller, Satoshi fontları, yerel D3 paketi, Natural Earth haritası.
-- `assets-manifest.json`: Figma görsellerinin kaynak eşlemesi; uygulama bu geçici URL'leri kullanmaz.
-- `index-v0.html` / `app-v0.js` / `styles-v0.css`: Önceki kesit (arşiv).
+### Tanıtım akışı hakkında
 
-## Kaynaklar
+Bu akış daha önce bu deponun kökündeydi ve `avrupa-cepte-animasyon.vercel.app`
+adresinde tek başına yayınlanıyordu. Sahne animasyonlarına dokunulmadı; yalnızca
+sayfa yapısı panonun tasarım sistemine getirildi. Uyum kuralları `tanitim/fit.css`
+içinde ayrı tutuldu, `styles.css` ve `styles-v0.css` el değmeden duruyor.
 
-- Tasarım: https://www.figma.com/design/P1pFVExX502FQrV6nCLTjJ/Avrupa-Cepte?node-id=2602-48780
-- Kullanılan frame'ler: `2980:83535`, `3005:84351`, `3005:84362`.
-- Satoshi: Fontshare / Indian Type Foundry, https://www.fontshare.com/fonts/satoshi
-- D3 7.9.0: https://github.com/d3/d3 (ISC lisansı).
-- Natural Earth 1:110m land: https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_land.geojson (public domain).
+Arşiv dosyaları da taşındı ve korundu: `app-v0.js`, `app-v1.js`, `index-v0.html`,
+`index-v1.html`, `styles-v1.css`. Bunlardan `app-v1.js` ile `app.js` ve
+`styles-v1.css` ile `styles.css` şu an birebir aynı içerikte; silinip
+silinmeyecekleri ayrı bir karar.
 
-## Kontrol
+## Notlar
 
-Üç sahne tarayıcıda görsel olarak incelendi. Görsellerin yüklenmesi, sahne geçişleri, duraklatma, zaman çizelgesi, hız seçimi ve üçlü görünüm kontrol edildi. Mobil genişlikte yatay taşma bulunmadı. JavaScript sözdizimi kontrolü ve tarayıcı hata kaydı kontrolü temiz.
+- `vercel.json` içinde `trailingSlash: true` gerekli. Alt klasörlerdeki göreli
+  varlık yolları (`assets/...`) ancak sonunda eğik çizgi olan adreslerde doğru
+  çözülür.
+- Onboarding sahnelerinde karakter illüstrasyonu yoktur; kurgu düğüm, kart ve
+  çizgiyle anlatılır. Renkler CSS değişkenlerinden gelir.
