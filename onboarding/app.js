@@ -114,6 +114,28 @@ function flagBadge(flag, label) {
   ]);
 }
 
+/* Sayfa hapı: markanın /sayfa gösterimi. İkon ya dairesel bayrak ya emoji. */
+function pagePill(icon, name, emoji) {
+  const fs = 11.5;
+  const label = '/' + name;
+  const w = label.length * fs * .55 + 34, h = 26;
+  const cid = `pp${pagePill.n = (pagePill.n || 0) + 1}`;
+  const kids = [
+    S('rect', { x: -w / 2 + 2, y: -h / 2 + 3, width: w, height: h, rx: h / 2, fill: '#0B1B3A', opacity: .07 }),
+    S('rect', { x: -w / 2, y: -h / 2, width: w, height: h, rx: h / 2, fill: '#fff' }),
+    S('rect', { x: -w / 2, y: -h / 2, width: w, height: h, rx: h / 2, fill: 'none', stroke: '#E3EAF7' })
+  ];
+  if (emoji) {
+    kids.push(txt(emoji, { x: -w / 2 + 14, y: 4.6, 'font-size': 14, 'text-anchor': 'middle' }));
+  } else {
+    kids.push(S('defs', null, S('clipPath', { id: cid }, S('circle', { cx: -w / 2 + 14, cy: 0, r: 8 }))));
+    kids.push(S('image', { href: `${AST}flags/${icon}.svg`, x: -w / 2 + 6, y: -8, width: 16, height: 16, 'clip-path': `url(#${cid})` }));
+    kids.push(S('circle', { cx: -w / 2 + 14, cy: 0, r: 8, fill: 'none', stroke: '#0B1B3A', 'stroke-width': .9, opacity: .12 }));
+  }
+  kids.push(txt(label, { class: 't-ink', x: -w / 2 + 26, y: 4.1, 'font-size': fs, 'font-weight': 700 }));
+  return G(kids);
+}
+
 function scene1() {
   const g = G([]);
   const links = G([], { fill: 'none' });
@@ -121,14 +143,21 @@ function scene1() {
 
   const CX1 = 196.5, CY1 = 266;
 
-  /* Dış halka. Fotoğraflı olanlar insanları, manzaralılar yerleri temsil eder. */
+  /* Noktalı Avrupa haritası: tasarım dosyasındaki katılım ekranının zemini. */
+  const map = S('image', {
+    href: AST + 'europe-dots.png', x: 26, y: 118, width: 341, height: 300,
+    preserveAspectRatio: 'xMidYMid meet', opacity: .5
+  });
+  g.insertBefore(map, links);
+
+  /* Halka: her biri ayrı bir kişi, altında bulunduğu ülkenin rozeti. */
   const ring = [
-    { x: 196, y: 162, r: 31, img: 'people/kadin-1.jpg', flag: 'almanya', label: 'Berlin' },
-    { x: 303, y: 213, r: 26, img: 'people/erkek-1.jpg', flag: 'hollanda', label: 'Rotterdam' },
-    { x: 309, y: 316, r: 23, img: 'places/alpler.jpg', flag: 'avusturya', label: 'Viyana' },
-    { x: 196, y: 368, r: 27, img: 'people/erkek-1.jpg', flip: true, flag: 'fransa', label: 'Lyon' },
-    { x: 86, y: 318, r: 24, img: 'people/kadin-1.jpg', flip: true, flag: 'ispanya', label: 'Madrid' },
-    { x: 92, y: 212, r: 22, img: 'places/kampus.jpg', flag: 'isvec', label: 'Lund' }
+    { x: 196, y: 162, r: 31, img: 'people/kisi-1.jpg', flag: 'almanya', label: 'Almanya' },
+    { x: 303, y: 213, r: 26, img: 'people/kisi-4.jpg', flag: 'hollanda', label: 'Hollanda' },
+    { x: 309, y: 316, r: 23, img: 'people/kisi-3.jpg', flag: 'isvec', label: 'İsveç' },
+    { x: 196, y: 368, r: 27, img: 'people/kisi-5.jpg', flag: 'fransa', label: 'Fransa' },
+    { x: 86, y: 318, r: 24, img: 'people/kadin-1.jpg', flag: 'ispanya', label: 'İspanya' },
+    { x: 92, y: 212, r: 22, img: 'people/kisi-2.jpg', flag: 'avusturya', label: 'Avusturya' }
   ];
 
   /* merkez: sen */
@@ -192,8 +221,22 @@ function scene1() {
   g.appendChild(me);
   g.appendChild(meTag);
 
+  /* markanın sayfa hapları: topluluğun konu başlıkları */
+  const pages = [
+    { e: pagePill(null, 'schengen', '✈️'), x: 76, y: 148 },
+    { e: pagePill(null, 'haber', '📰'), x: 318, y: 398 }
+  ];
+  pages.forEach(p => g.appendChild(p.e));
+
   return { g, update(t) {
     g.setAttribute('opacity', envelope(t).toFixed(3));
+
+    pages.forEach((p, i) => {
+      const a = 2.05 + i * .18;
+      const u = eBack(seg(t, a, a + .6));
+      set(p.e, 'transform', tr(p.x, p.y + sn(t, 3.6, i * .4) * 4, clamp(u)));
+      set(p.e, 'opacity', clamp(seg(t, a, a + .26)).toFixed(3));
+    });
 
     nodes.forEach((n, i) => {
       const a = i * .07;
