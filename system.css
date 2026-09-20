@@ -18,6 +18,8 @@
   --brand: #0055FF;
   --brand-mid: #518EF8;
   --tint: #E8F0FF;
+  --ok: #15AE3B;
+  --ok-tint: #F5FFF8;
   --bezel: #0B0D12;
 }
 @media (prefers-color-scheme: dark) {
@@ -32,6 +34,8 @@
     --accent: #4D8BFF;
     --accent-ink: #0A0C12;
     --shadow: 0 40px 80px -30px rgba(0, 0, 0, .8);
+    --ok: #2ED45C;
+    --ok-tint: #0F2417;
     --bezel: #000000;
   }
 }
@@ -46,6 +50,8 @@
   --accent: #4D8BFF;
   --accent-ink: #0A0C12;
   --shadow: 0 40px 80px -30px rgba(0, 0, 0, .8);
+  --ok: #2ED45C;
+  --ok-tint: #0F2417;
   --bezel: #000000;
 }
 

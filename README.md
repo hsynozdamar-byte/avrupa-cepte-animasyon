@@ -20,7 +20,7 @@ Ardından http://127.0.0.1:4173 adresini aç.
 | `/` | Pano | Üç akışın listesi, sahnelere derin bağlantılar |
 | `/splash/` | Açılış akışı | Avrupa Cepte splash → sponsor splash → ana ekran, 4,6 sn |
 | `/tanitim/` | Tanıtım akışı | Görünür ol, topluluğuna ulaş, sesini duyur, 3X büyüme; 4 sahne, 30 sn |
-| `/onboarding/` | Onboarding akışı | Aidiyet, tavsiye, kişisel akış, erişim; ilk ekran 12,2 sn, diğerleri 3,6 sn |
+| `/onboarding/` | Onboarding akışı | Aidiyet, tavsiye, kişisel akış, erişim; ilk ekran 12,2 sn, ikincisi 8 sn, kalanlar 3,6 sn |
 
 Üçü de 393 × 852 çerçevede çalışır. Pano, açılış ve onboarding koyu temayı
 destekler.
@@ -60,5 +60,9 @@ silinmeyecekleri ayrı bir karar.
 - `vercel.json` içinde `trailingSlash: true` gerekli. Alt klasörlerdeki göreli
   varlık yolları (`assets/...`) ancak sonunda eğik çizgi olan adreslerde doğru
   çözülür.
-- Onboarding sahnelerinde karakter illüstrasyonu yoktur; kurgu düğüm, kart ve
-  çizgiyle anlatılır. Renkler CSS değişkenlerinden gelir.
+- Onboarding 02, tasarım dosyasındaki (`Avrupa Cepte.pdf`, s. 77) gerçek gönderi
+  kartını kullanır: mühürlü “Sordu” rozeti, /avrupa hapı, oy–cevap–paylaş satırı,
+  yeşil çerçeveli “En iyi cevap” kutusu ve “Soru Çözüldü” hapı. Ölçü ve renkler
+  oradan alındı; yeşil `--ok` olarak `system.css`'e girdi.
+- Henüz elden geçmemiş 03 ve 04'te karakter illüstrasyonu yoktur; kurgu düğüm,
+  kart ve çizgiyle anlatılır. Renkler CSS değişkenlerinden gelir.

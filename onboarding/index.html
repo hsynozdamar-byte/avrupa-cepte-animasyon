@@ -26,12 +26,13 @@
     font-size: 14px; font-weight: 600; color: var(--muted);
   }
 
-  .copy { left: 24px; top: 512px; width: 345px; }
+  .copy { left: 24px; top: 548px; width: 345px; }
   .copy h3 {
     margin: 0 0 14px;
     font-size: 30px; line-height: 1.12; letter-spacing: -.035em; font-weight: 700;
     color: var(--ink);
   }
+  .copy h3, .copy p { white-space: nowrap; }
   .copy p {
     margin: 0; font-size: 15px; line-height: 1.5; color: var(--muted); font-weight: 500;
   }
@@ -65,6 +66,31 @@
   .art .t-mute { fill: var(--muted); font-weight: 500; }
   .art .t-brand { fill: var(--brand); font-weight: 600; }
   .art .pill { fill: var(--surface); stroke: var(--line); stroke-width: 1; }
+  /* ---------- 02 · tasarımdaki gerçek arayüz parçaları ---------- */
+  /* Renkler Avrupa Cepte.pdf s.77'den: mavi #0055FF, yeşil #15AE3B,
+     oy hapı #CCD9F3. Koyu temada yeşil ve yüzeyler tokenlara uyar. */
+  .art .ui-card { fill: var(--surface); }
+  .art .ui-name { fill: var(--ink); font-weight: 700; }
+  .art .ui-body { fill: var(--ink); font-weight: 500; }
+  .art .ui-mute { fill: var(--muted); font-weight: 500; }
+  .art .ui-ring { fill: none; stroke: var(--line); stroke-width: 1; }
+  .art .ui-ring-thin { fill: none; stroke: #0B1B3A; stroke-opacity: .12; stroke-width: .9; }
+  .art .ui-seal { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-opacity: .85; }
+  .art .ui-menu { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-opacity: .8; }
+  .art .ui-pill { fill: var(--surface); stroke: var(--line); stroke-width: 1; }
+  .art .ui-ghost { fill: none; stroke: var(--line); stroke-width: 1; }
+  .art .ui-ico { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .art .ui-up { fill: var(--brand); fill-opacity: .18; }
+  .art .ui-up-t { fill: var(--brand); font-weight: 700; }
+  .art .ui-up-i { fill: var(--brand); }
+  .art .ui-ok { fill: var(--ok); font-weight: 600; }
+  .art .ui-ok-fill { fill: var(--ok); }
+  .art .ui-ans { fill: var(--ok-tint); stroke: var(--ok); stroke-width: 1.2; }
+  /* koyu temada yeşil açılıyor; üstündeki yazı beyaz kalırsa okunmuyor */
+  .art .ui-ok-ink { fill: #FFFFFF; font-weight: 600; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .art .ui-ok-ink { fill: #06240F; } }
+  :root[data-theme="dark"] .art .ui-ok-ink { fill: #06240F; }
+
   .art .globe-land { fill: var(--brand-mid); fill-opacity: .42; stroke: var(--brand); stroke-opacity: .18; stroke-width: .6; }
   .art .globe-grat { fill: none; stroke: var(--brand); stroke-opacity: .12; stroke-width: .6; }
   .art .globe-rim { fill: none; stroke: var(--brand); stroke-opacity: .22; stroke-width: 1; }
@@ -96,8 +122,8 @@
         <img class="status" src="../assets/status.png" alt="" id="status">
         <p class="skip">Atla</p>
         <div class="copy">
-          <h3 id="obHead">Avrupa’nın her yerinde bir tanıdığın var</h3>
-          <p id="obSub">Avrupa’da yaşayanlar ve gitmeyi planlayanlar için tek topluluk.</p>
+          <h3 id="obHead">Avrupa’nın her yerinde<br>bir tanıdığın var</h3>
+          <p id="obSub">Avrupa’da yaşayanlar ve gitmeyi planlayanlar<br>için tek topluluk.</p>
         </div>
         <div class="dots" id="obDots"><i class="on"></i><i></i><i></i><i></i></div>
         <div class="cta" id="obCta">Devam et</div>
@@ -113,7 +139,7 @@
       <ul class="chain" aria-label="Akış">
         <li>Aidiyet</li><li>Tavsiye</li><li>Kişisel akış</li><li>Erişim</li>
       </ul>
-      <p class="lead">Dört karşılama ekranı tek bir anlatı kurar: dağınık insanlar buluşur, aralarında tavsiye dolaşır, bu bilgi kişisel bir akışa iner ve sonunda bir hizmet doğru topluluğa ulaşır. Her ekran bir kez oynar, döngü yok: ilk ekran <strong>12,2 saniye</strong>, diğerleri <strong>3,6 saniye</strong>. Tam akışta ekranlar 1,5 sn bekleyip sırayla geçer; telefondaki <strong>Devam et</strong> beklemeden geçirir.</p>
+      <p class="lead">Dört karşılama ekranı tek bir anlatı kurar: dağınık insanlar buluşur, aralarında tavsiye dolaşır, bu bilgi kişisel bir akışa iner ve sonunda bir hizmet doğru topluluğa ulaşır. Her ekran bir kez oynar, döngü yok: ilk ekran <strong>12,2 saniye</strong>, ikincisi <strong>8 saniye</strong>, kalanlar <strong>3,6 saniye</strong>. Tam akışta ekranlar 1,5 sn bekleyip sırayla geçer; telefondaki <strong>Devam et</strong> beklemeden geçirir.</p>
     </header>
 
     <div class="modes">

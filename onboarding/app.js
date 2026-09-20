@@ -1,11 +1,13 @@
 /* Avrupa Cepte — Onboarding akışı
-   Dört karşılama ekranı, 393×852. İlk ekran 12,2 sn, diğerleri 3,6 sn.
-   İlk ekran küre, rota ve portrelerle; diğerleri düğüm/kart/çizgiyle anlatılır.
+   Dört karşılama ekranı, 393×852. İlk ekran 12,2 sn, ikincisi 8 sn,
+   kalanlar 3,6 sn. İlk ekran küre, rota ve portrelerle; ikincisi tasarım
+   dosyasındaki gerçek gönderi kartıyla; kalanlar düğüm/kart/çizgiyle.
    Renkler CSS değişkenlerinden gelir, koyu tema da doğru çalışır. */
 'use strict';
 
 const NS = 'http://www.w3.org/2000/svg';
-const SC = 3.6;                 /* sahne süresi */
+const SC = 3.6;                 /* henüz elden geçmemiş sahnelerin süresi */
+const D2 = 8.0;                 /* 02 · gerçek gönderi kartı, anlatacak daha çok şey var */
 const CX = 196.5, CY = 272;     /* sanat alanının merkezi */
 
 /* ---------- yardımcılar ---------- */
@@ -37,7 +39,7 @@ const envelope = t => fadeIn(t);
 /* Durdurulmuş hâlde gösterilecek oturmuş kare. Sahne t=0'da tamamen
    saydam olduğu için, oynatma başlamadan 0. saniye gösterilirse ekran
    boş görünür ve sayfa bozuk sanılır. */
-const DURS = [12.2, SC, SC, SC];
+const DURS = [12.2, D2, SC, SC];
 const STARTS = DURS.map((_, i) => DURS.slice(0, i).reduce((a, b) => a + b, 0));
 const TOTAL = DURS.reduce((a, b) => a + b, 0);
 const poster = m => (m === 'full' ? DURS[0] * .9 : DURS[+m - 1] * (m === '1' ? .9 : .8));
@@ -117,28 +119,6 @@ function flagBadge(flag, label) {
   ]);
 }
 
-/* Sayfa hapı: markanın /sayfa gösterimi. İkon ya dairesel bayrak ya emoji. */
-function pagePill(icon, name, emoji) {
-  const fs = 11.5;
-  const label = '/' + name;
-  const w = label.length * fs * .55 + 34, h = 26;
-  const cid = `pp${pagePill.n = (pagePill.n || 0) + 1}`;
-  const kids = [
-    S('rect', { x: -w / 2 + 2, y: -h / 2 + 3, width: w, height: h, rx: h / 2, fill: '#0B1B3A', opacity: .07 }),
-    S('rect', { x: -w / 2, y: -h / 2, width: w, height: h, rx: h / 2, fill: '#fff' }),
-    S('rect', { x: -w / 2, y: -h / 2, width: w, height: h, rx: h / 2, fill: 'none', stroke: '#E3EAF7' })
-  ];
-  if (emoji) {
-    kids.push(txt(emoji, { x: -w / 2 + 14, y: 4.6, 'font-size': 14, 'text-anchor': 'middle' }));
-  } else {
-    kids.push(S('defs', null, S('clipPath', { id: cid }, S('circle', { cx: -w / 2 + 14, cy: 0, r: 8 }))));
-    kids.push(S('image', { href: `${AST}flags/${icon}.svg`, x: -w / 2 + 6, y: -8, width: 16, height: 16, 'clip-path': `url(#${cid})` }));
-    kids.push(S('circle', { cx: -w / 2 + 14, cy: 0, r: 8, fill: 'none', stroke: '#0B1B3A', 'stroke-width': .9, opacity: .12 }));
-  }
-  kids.push(txt(label, { class: 't-ink', x: -w / 2 + 26, y: 4.1, 'font-size': fs, 'font-weight': 700 }));
-  return G(kids);
-}
-
 /* İlk ekranın zaman çizelgesi (sn). Buton ile geçildiği için acele yok. */
 const T1 = {
   globeIn: [0, 1.9],       /* küre sağ alttan kadraja yükselir */
@@ -149,7 +129,6 @@ const T1 = {
   tilt: [3.9, 6.5],
   dots: 5.9,               /* şehir noktaları */
   fly: [6.7, 11.0],        /* rota uçuşu, şehirlerde yavaşlar */
-  pages: 10.8,             /* sayfa hapları */
   end: 12.2
 };
 const D1 = T1.end;
@@ -234,16 +213,55 @@ function makePlane() {
 const wrapDeg = a => ((a + 540) % 360) - 180;
 const deg = (a, b) => Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
 
-/* Catmull-Rom noktalarından yumuşak SVG yolu. */
-function smoothPath(p) {
-  let d = `M${p[0][0]} ${p[0][1]}`;
-  for (let i = 0; i < p.length - 1; i++) {
-    const a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c;
-    const c1 = [b[0] + (c[0] - a[0]) / 6, b[1] + (c[1] - a[1]) / 6];
-    const c2 = [c[0] - (e[0] - b[0]) / 6, c[1] - (e[1] - b[1]) / 6];
-    d += ` C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${c[0].toFixed(1)} ${c[1].toFixed(1)}`;
+/* Kübik B-spline'ı Bézier parçalarına çevirir. Uçlar sabitlenir (ilk ve son
+   nokta üçlenir). k > 0 ara noktaları komşularının ortasından dışa iter;
+   k = .5 eğriyi noktalardan tam geçirir, küçük değerler daha yumuşak kavis verir. */
+function bspline(pts, k) {
+  const P = pts.map((p, i) => {
+    if (i === 0 || i === pts.length - 1) return p;
+    const m = [(pts[i - 1][0] + pts[i + 1][0]) / 2, (pts[i - 1][1] + pts[i + 1][1]) / 2];
+    return [p[0] + k * (p[0] - m[0]), p[1] + k * (p[1] - m[1])];
+  });
+  const Q = [P[0], P[0]].concat(P, [P[P.length - 1], P[P.length - 1]]);
+  const f = v => v.toFixed(1);
+  let d = `M${f(P[0][0])} ${f(P[0][1])}`;
+  for (let i = 0; i + 3 < Q.length; i++) {
+    const [a, b, c, e] = [Q[i], Q[i + 1], Q[i + 2], Q[i + 3]];
+    const b1 = [(4 * b[0] + 2 * c[0]) / 6, (4 * b[1] + 2 * c[1]) / 6];
+    const b2 = [(2 * b[0] + 4 * c[0]) / 6, (2 * b[1] + 4 * c[1]) / 6];
+    const b3 = [(b[0] + 4 * c[0] + e[0]) / 6, (b[1] + 4 * c[1] + e[1]) / 6];
+    d += ` C${f(b1[0])} ${f(b1[1])} ${f(b2[0])} ${f(b2[1])} ${f(b3[0])} ${f(b3[1])}`;
   }
   return d;
+}
+
+/* Keskin köşeleri genişletir: dönüşü keskin olan her ara noktanın yerine, tepesi
+   o noktada olan R yarıçaplı bir yay koyar. Uçak şehrin üstünden geçer ama
+   dönüşü geniş bir kavisle, yatarak yapar. */
+function roundCorners(pts, R, minTurn) {
+  const out = [pts[0]];
+  for (let i = 1; i < pts.length - 1; i++) {
+    const [a, c, b] = [pts[i - 1], pts[i], pts[i + 1]];
+    const u = [c[0] - a[0], c[1] - a[1]], v = [b[0] - c[0], b[1] - c[1]];
+    const lu = Math.hypot(u[0], u[1]), lv = Math.hypot(v[0], v[1]);
+    const ha = Math.atan2(u[1], u[0]), hb = Math.atan2(v[1], v[0]);
+    let turn = hb - ha;
+    turn = Math.atan2(Math.sin(turn), Math.cos(turn));
+    if (Math.abs(turn) * 180 / Math.PI < minTurn) { out.push(c); continue; }
+    /* yayın merkezi dönüşün içinde; tepe noktası şehir */
+    const w = [u[0] / lu - v[0] / lv, u[1] / lu - v[1] / lv];
+    const lw = Math.hypot(w[0], w[1]) || 1;
+    const r = Math.min(R, lu * .55, lv * .55);
+    const O = [c[0] - w[0] / lw * r, c[1] - w[1] / lw * r];
+    const mid = Math.atan2(c[1] - O[1], c[0] - O[0]);
+    const half = Math.abs(turn) / 2, dir = Math.sign(turn);
+    for (let k = -2; k <= 2; k++) {
+      const ang = mid + dir * half * k / 2;
+      out.push([O[0] + Math.cos(ang) * r, O[1] + Math.sin(ang) * r]);
+    }
+  }
+  out.push(pts[pts.length - 1]);
+  return out;
 }
 
 const grad = (id, a, stops) => S('radialGradient', Object.assign({ id }, a),
@@ -264,17 +282,20 @@ function scene1() {
   const R0 = 116, R1 = 690;         /* küre yarıçapı → Avrupa yakın planı */
   const FOCUS = [12.6, 49.6];       /* yakın planın merkezi: Madrid'den İstanbul'a */
 
-  /* Uçağın sırayla geçtiği şehirler. */
+  /* Uçağın sırayla geçtiği şehirler: harita merkezi çevresinde saat yönünde
+     tek, geniş bir tur (sıra, merkeze göre açılarından). Geri dönüş yok.
+     Almanya için Hamburg: Paris–Stokholm hattının üstünde; Berlin turun
+     içinde kalıp saç tokası dönüşe yol açıyordu. */
   const cities = [
     { ll: [-3.70, 40.42], r: 23, img: 'people/kadin-1.jpg', flag: 'ispanya', label: 'Madrid' },
     { ll: [2.35, 48.86], r: 24, img: 'people/kisi-4.jpg', flag: 'fransa', label: 'Paris' },
+    { ll: [9.99, 53.55], r: 25, img: 'people/kisi-1.jpg', flag: 'almanya', label: 'Hamburg' },
     { ll: [18.07, 59.33], r: 22, img: 'people/kisi-3.jpg', flag: 'isvec', label: 'Stokholm' },
-    { ll: [13.40, 52.52], r: 25, img: 'people/kisi-1.jpg', flag: 'almanya', label: 'Berlin' },
     { ll: [21.01, 52.23], r: 21, img: 'people/kisi-2.jpg', flag: 'polonya', label: 'Varşova' },
-    { ll: [12.50, 41.90], r: 23, img: 'people/kisi-5.jpg', flag: 'italya', label: 'Roma' },
-    { ll: [28.98, 41.01], r: 24, img: 'people/erkek-1.jpg', flag: 'turkiye', label: 'İstanbul' }
+    { ll: [28.98, 41.01], r: 24, img: 'people/erkek-1.jpg', flag: 'turkiye', label: 'İstanbul' },
+    { ll: [12.50, 41.90], r: 23, img: 'people/kisi-5.jpg', flag: 'italya', label: 'Roma' }
   ];
-  const APPROACH = [-6.5, 46.2];    /* dalışın bittiği nokta: İspanya açıkları */
+  const APPROACH = [-2.6, 36.2];    /* dalışın bittiği nokta: Cebelitarık açıkları, tura güneyden girilir */
 
   const proj = d3.geoOrthographic().clipAngle(90);
   const geo = d3.geoPath(proj);
@@ -291,10 +312,9 @@ function scene1() {
     ]),
     S('mask', { id: mid, maskUnits: 'userSpaceOnUse', x: -100, y: 0, width: 600, height: 852 },
       S('rect', { x: -100, y: 0, width: 600, height: 852, fill: `url(#${mid}G)` })),
-    grad('obSea', { cx: .36, cy: .3, r: .8 }, [[0, 'var(--surface)', 1], [.5, 'var(--tint)', 1], [1, 'var(--brand-mid)', .5]]),
-    grad('obShade', { cx: .32, cy: .28, r: .88 }, [[0, '#0A2A6B', 0], [.62, '#0A2A6B', 0], [1, '#0A2A6B', .3]]),
+    grad('obSea', { cx: .36, cy: .3, r: .8 }, [[0, 'var(--surface)', 1], [.5, 'var(--tint)', 1], [1, 'var(--brand-mid)', .28]]),
     grad('obHi', { cx: .32, cy: .26, r: .34 }, [[0, '#FFFFFF', .7], [1, '#FFFFFF', 0]]),
-    grad('obAtmo', { cx: .5, cy: .5, r: .5 }, [[0, 'var(--brand)', 0], [.8, 'var(--brand)', 0], [.85, 'var(--brand)', .17], [1, 'var(--brand)', 0]])
+    grad('obAtmo', { cx: .5, cy: .5, r: .5 }, [[0, 'var(--brand)', 0], [.8, 'var(--brand)', 0], [.84, 'var(--brand)', .06], [1, 'var(--brand)', 0]])
   ]));
 
   const stage = G([], { mask: `url(#${mid})` });
@@ -308,10 +328,9 @@ function scene1() {
   const sea = S('path', { fill: 'url(#obSea)' });
   const gratP = S('path', { class: 'globe-grat' });
   const landP = S('path', { class: 'globe-land' });
-  const shade = S('path', { fill: 'url(#obShade)' });
   const hi = S('path', { fill: 'url(#obHi)' });
   const rim = S('path', { class: 'globe-rim' });
-  [sea, gratP, landP, shade, hi, rim].forEach(e => map.appendChild(e));
+  [sea, gratP, landP, hi, rim].forEach(e => map.appendChild(e));
   stage.appendChild(map);
   const front = G([]);
   stage.appendChild(front);
@@ -320,7 +339,8 @@ function scene1() {
   const trail = S('path', { class: 'ln', 'stroke-dasharray': '1.5 5', 'stroke-width': 1.8, opacity: 0, mask: 'url(#obTrailMask)' });
   const trailReveal = S('path', { fill: 'none', stroke: '#fff', 'stroke-width': 8, 'stroke-linecap': 'round' });
   g.appendChild(S('defs', null, S('mask', { id: 'obTrailMask', maskUnits: 'userSpaceOnUse', x: -100, y: -100, width: 600, height: 1000 }, trailReveal)));
-  g.appendChild(trail);
+  /* iz de haritanın maskesiyle söner, metnin üstüne taşmaz */
+  g.appendChild(G([trail], { mask: `url(#${mid})` }));
   const dots = G([]);
   const people = G([]);
   g.appendChild(dots);
@@ -340,9 +360,13 @@ function scene1() {
     people.appendChild(c.badge);
   });
   const A = proj(APPROACH);
-  const routePts = [[A[0], A[1]]].concat(cities.map(c => [c.x, c.y])).concat([[430, 520]]);
-  set(trail, 'd', smoothPath(routePts));
-  set(trailReveal, 'd', smoothPath(routePts));
+  /* Rota: şehirlerin yakınından süzülen kübik B-spline. Eğrilik sürekli
+     değişir, ani kırılma olmaz; kontrol noktaları biraz dışa itilir ki eğri
+     şehirlere yakın geçsin. Rotadan sonra güneye, kadraj dışına süzülür. */
+  const ctrl = [[A[0], A[1]]].concat(cities.map(c => [c.x, c.y])).concat([[70, 470], [10, 600]]);
+  const routeD = bspline(roundCorners(ctrl, 60, 20), 0);
+  set(trail, 'd', routeD);
+  set(trailReveal, 'd', routeD);
 
   /* ---- uçak ---- */
   const plane = makePlane();
@@ -387,10 +411,10 @@ function scene1() {
   const lastS = cityS[cityS.length - 1];
   const speed = s => {
     let dip = 0;
-    cityS.forEach(cs => { dip += Math.exp(-Math.pow((s - cs) / 52, 2)); });
+    cityS.forEach(cs => { dip += Math.exp(-Math.pow((s - cs) / 75, 2)); });
     const start = .3 + .7 * smooth(clamp(s / 150));
     const out = 1 + .8 * smooth(clamp((s - lastS) / 160));
-    return (1 - .58 * Math.min(1, dip)) * start * out;
+    return (1 - .38 * Math.min(1, dip)) * start * out;
   };
   const timeTab = [0];
   for (let i = 1; i < pts.length; i++) timeTab.push(timeTab[i - 1] + STEP / speed((i - .5) * STEP));
@@ -401,11 +425,38 @@ function scene1() {
   const passAt = cityS.map(cs => F0 + timeTab[Math.round(cs / STEP)] * (F1 - F0));
   const at = s => trail.getPointAtLength(clamp(s, 0, RL));
 
-  const pages = [
-    { e: pagePill(null, 'schengen', '✈️'), x: 82, y: 128 },
-    { e: pagePill('avrupa', 'avrupa'), x: 110, y: 470 }
+
+  /* Topluluk ağı: vurgulu şehirlerin çevresindeki diğer şehirler. İçlerinde kişi
+     yok; uçak bir şehre uğrayıp kişi belirince, oradan en yakın noktalara ince
+     kavisli bağlar uzanır, bağ ulaştığı nokta bir dalgayla yanar. */
+  const NETWORK = [
+    [-9.14, 38.72], [2.17, 41.39], [-0.13, 51.51], [4.90, 52.37], [8.54, 47.37],
+    [11.58, 48.14], [12.57, 55.68], [10.75, 59.91], [24.94, 60.17], [14.42, 50.08],
+    [16.37, 48.21], [19.04, 47.50], [23.73, 37.98], [26.10, 44.43], [27.14, 38.42]
   ];
-  pages.forEach(p => g.appendChild(p.e));
+  const netG = G([], { mask: `url(#${mid})` });
+  g.insertBefore(netG, dots);
+  const perHub = cities.map(() => 0);
+  const network = NETWORK.map(ll => {
+    const p = proj(ll);
+    let hub = 0, bd = 1e9;
+    cities.forEach((c, i) => { const d = Math.hypot(c.x - p[0], c.y - p[1]); if (d < bd) { bd = d; hub = i; } });
+    const c = cities[hub];
+    const mx = (c.x + p[0]) / 2, my = (c.y + p[1]) / 2;
+    const nx = -(p[1] - c.y) * .2, ny = (p[0] - c.x) * .2;
+    const arc = S('path', {
+      class: 'ln', d: `M${c.x.toFixed(1)} ${c.y.toFixed(1)} Q${(mx + nx).toFixed(1)} ${(my + ny).toFixed(1)} ${p[0].toFixed(1)} ${p[1].toFixed(1)}`,
+      pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1, 'stroke-width': 1, opacity: 0
+    });
+    const ring = S('circle', { class: 'ring', r: 7, 'stroke-width': 1.2, opacity: 0 });
+    const pin = G([
+      S('circle', { r: 3.4, fill: '#fff' }),
+      S('circle', { class: 'nd', r: 2.2 })
+    ]);
+    netG.appendChild(arc); netG.appendChild(ring); netG.appendChild(pin);
+    const order = perHub[hub]++;
+    return { arc, ring, pin, x: p[0], y: p[1], hub, delay: .35 + order * .14 };
+  });
 
   let lastKey = '';
   return { g, update(t) {
@@ -432,14 +483,13 @@ function scene1() {
     if (key !== lastKey) {
       lastKey = key;
       const sph = geo({ type: 'Sphere' });
-      [sea, shade, hi, rim].forEach(e => set(e, 'd', sph));
+      [sea, hi, rim].forEach(e => set(e, 'd', sph));
       set(gratP, 'd', geo(grat));
       if (LAND) set(landP, 'd', geo(LAND));
     }
     const appear = eOut(seg(t, 0, .6));
     set(map, 'opacity', appear.toFixed(3));
     set(sea, 'opacity', (1 - zoom * .85).toFixed(3));
-    set(shade, 'opacity', live.toFixed(3));
     set(hi, 'opacity', live.toFixed(3));
     set(rim, 'opacity', live.toFixed(3));
     set(gratP, 'opacity', (1 - zoom * .6).toFixed(3));
@@ -509,12 +559,14 @@ function scene1() {
       setTrail(TH1, 0, gx, gy, k);
       toLayer(g);
       const s = sAt(t);
-      if (s < RL - 1) {
+      if (t < F1 && s < RL - STEP * 2) {
         const p = at(s);
         const head = deg(at(s - 4), at(s + 12));
         const turn = wrapDeg(deg(at(s + 16), at(s + 24)) - deg(at(s - 24), at(s - 16)));
         const vn = speed(s) * TT / RL;               /* ortalamaya göre hız */
-        plane.update(p.x, p.y + sn(t, .9) * 1.2, head, turn * vn / 32, .92 * (1 + .07 * (vn - 1)), 1, t);
+        /* kadrajın alt kenarına, metne yaklaşınca söner */
+        const fadeOut = 1 - seg(p.y, 430, 490);
+        plane.update(p.x, p.y + sn(t, .9) * 1.2, head, turn * vn / 32, .92 * (1 + .07 * (vn - 1)), fadeOut, t);
       } else set(plane.g, 'opacity', 0);
     }
 
@@ -545,92 +597,241 @@ function scene1() {
       set(c.badge, 'opacity', clamp(seg(t, pass + .16, pass + .36)).toFixed(3));
     });
 
-    pages.forEach((pg, i) => {
-      const a = T1.pages + i * .16;
-      const pu = eBack(seg(t, a, a + .55));
-      set(pg.e, 'transform', tr(pg.x, pg.y + sn(t, 3.6, i * .4) * 3, clamp(pu)));
-      set(pg.e, 'opacity', clamp(seg(t, a, a + .24)).toFixed(3));
+
+    network.forEach(n => {
+      const a = passAt[n.hub] + n.delay;
+      const d = eInOut(seg(t, a, a + .55));
+      set(n.arc, 'stroke-dashoffset', (1 - d).toFixed(4));
+      set(n.arc, 'opacity', (d > 0 ? .32 : 0).toFixed(3));
+      const hit = a + .5;
+      const pu = eBack(seg(t, hit, hit + .35));
+      set(n.pin, 'transform', tr(n.x, n.y, clamp(pu)));
+      set(n.pin, 'opacity', clamp(seg(t, hit, hit + .15)).toFixed(3));
+      const rp = seg(t, hit, hit + .7);
+      set(n.ring, 'transform', tr(n.x, n.y, .4 + rp * 1.4));
+      set(n.ring, 'opacity', (rp > 0 && rp < 1 ? (1 - rp) * .6 : 0).toFixed(3));
     });
   } };
 }
 
 /* ═══════════ 02 · Sor, paylaş, tavsiye al ═══════════ */
+/* Tasarım dosyasındaki gerçek gönderi kartı: başlık satırı (portre, ad, mühürlü
+   "Sordu" rozeti, şehir · süre), soru metni, /avrupa hapı, oy–cevap–paylaş
+   satırı; içinde yeşil çerçeveli "En iyi cevap" kutusu ve "Soru Çözüldü"
+   hapı. Ölçüler ve renkler Avrupa Cepte.pdf s.77'den alındı. */
+
+/* SF Symbols'daki mühürlü onay (checkmark.seal): tırtıklı daire. */
+function sealPath(r) {
+  const N = 10, ri = r * .88, br = ri * .38;
+  let d = '';
+  for (let i = 0; i < N; i++) {
+    const a0 = i / N * Math.PI * 2 - Math.PI / 2, a1 = (i + 1) / N * Math.PI * 2 - Math.PI / 2;
+    const p0 = [Math.cos(a0) * ri, Math.sin(a0) * ri], p1 = [Math.cos(a1) * ri, Math.sin(a1) * ri];
+    if (!i) d += `M${p0[0].toFixed(2)} ${p0[1].toFixed(2)}`;
+    d += ` A${br.toFixed(2)} ${br.toFixed(2)} 0 0 1 ${p1[0].toFixed(2)} ${p1[1].toFixed(2)}`;
+  }
+  return d + 'Z';
+}
+const CHECK = 'M-3.1 .1 L-1.1 2.2 L3.2 -2.4';
+
 function scene2() {
   const g = G([]);
-  const cardY = 214;
-  const links = G([]);
-  g.appendChild(links);
 
-  const nodes = [[64, 150], [330, 158], [52, 356], [342, 346]].map(p => {
-    const e = G([
-      S('circle', { class: 'card-soft', cx: 0, cy: 0, r: 16 }),
-      S('circle', { class: 'nd', cx: 0, cy: 0, r: 6.5 })
-    ]);
+  /* --- ölçüler (kart içi koordinat) --- */
+  const W = 345, PAD = 16;          /* kart genişliği ve iç boşluk */
+  const AV = 15;                    /* soruyu soranın portre yarıçapı */
+  const ANS_T = 118, ANS_H = 108;   /* cevap kutusunun üst kenarı ve yüksekliği */
+  const MID = 312;                  /* kart dikey merkezde durur, iki yana büyür */
+  const CL = CX - W / 2;            /* kartın sol kenarı (sahne koordinatı) */
+
+  const layout = u => {
+    const content = ANS_T + (ANS_H + 14) * u;
+    const pillCY = content + 13;
+    const actCY = pillCY + 40;
+    return { content, pillCY, actCY, h: actCY + 17 + PAD };
+  };
+
+  g.appendChild(S('defs', null, [
+    S('filter', { id: 'obCardSh', x: '-25%', y: '-20%', width: '150%', height: '150%' },
+      S('feDropShadow', { dx: 0, dy: 10, stdDeviation: 14, 'flood-color': '#0B1B3A', 'flood-opacity': .13 })),
+    S('clipPath', { id: 'obAskFace' }, S('circle', { cx: 0, cy: 0, r: AV })),
+    S('clipPath', { id: 'obAnsFace' }, S('circle', { cx: 0, cy: 0, r: 11 })),
+    S('clipPath', { id: 'obEuClip' }, S('circle', { cx: 0, cy: 0, r: 9 }))
+  ]));
+
+  /* --- kart gövdesi --- */
+  const card = G([]);
+  g.appendChild(card);
+  const plate = S('rect', { class: 'ui-card', x: 0, y: 0, width: W, height: 200, rx: 24, filter: 'url(#obCardSh)' });
+  card.appendChild(plate);
+
+  /* --- başlık satırı --- */
+  const head = G([
+    G([S('image', { href: AST + 'people/kadin-1.jpg', x: -AV, y: -AV, width: AV * 2, height: AV * 2, preserveAspectRatio: 'xMidYMid slice', 'clip-path': 'url(#obAskFace)' }),
+      S('circle', { class: 'ui-ring', cx: 0, cy: 0, r: AV })], { transform: tr(PAD + AV, PAD + AV) })
+  ]);
+  const name = txt('Elif Yılmaz', { class: 'ui-name', x: PAD + AV * 2 + 10, y: PAD + 13, 'font-size': 15 });
+  head.appendChild(name);
+  const asked = G([
+    S('path', { class: 'ui-seal', d: sealPath(7.6) }),
+    S('path', { class: 'ui-seal', d: CHECK, 'stroke-width': 1.5, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }),
+    txt('Sordu', { class: 'ui-mute', x: 11, y: 4.2, 'font-size': 12.5 })
+  ], { opacity: 0 });
+  head.appendChild(asked);
+  head.appendChild(txt('Berlin • 2s', { class: 'ui-mute', x: PAD + AV * 2 + 10, y: PAD + 31, 'font-size': 12.5 }));
+  head.appendChild(G([
+    S('path', { class: 'ui-menu', d: 'M0 0 H18' }),
+    S('path', { class: 'ui-menu', d: 'M0 5.5 H18' })
+  ], { transform: tr(W - PAD - 18, PAD + 9) }));
+  card.appendChild(head);
+
+  /* --- soru metni --- */
+  const qLines = ['Mavi Kart başvurusunda randevuyu', 'nasıl hızlandırdınız?'].map((s, i) =>
+    txt(s, { class: 'ui-body', x: PAD, y: 80 + i * 21, 'font-size': 15 }));
+  qLines.forEach(e => card.appendChild(e));
+
+  /* --- en iyi cevap kutusu --- */
+  const ansBox = S('rect', { class: 'ui-ans', x: PAD, y: ANS_T, width: W - PAD * 2, height: ANS_H, rx: 16 });
+  const ansRect = S('rect', { x: PAD, y: ANS_T, width: W - PAD * 2, height: ANS_H, rx: 16 });
+  g.querySelector('defs').appendChild(S('clipPath', { id: 'obAnsClip' }, ansRect));
+  const ansIn = G([], { 'clip-path': 'url(#obAnsClip)' });
+  const ans = G([ansBox, ansIn], { opacity: 0 });
+  card.appendChild(ans);
+
+  const ansHead = G([
+    G([S('image', { href: AST + 'people/kisi-3.jpg', x: -11, y: -11, width: 22, height: 22, preserveAspectRatio: 'xMidYMid slice', 'clip-path': 'url(#obAnsFace)' }),
+      S('circle', { class: 'ui-ring', cx: 0, cy: 0, r: 11 })], { transform: tr(PAD + 14 + 11, ANS_T + 22) }),
+    txt('Zeynep T.', { class: 'ui-name', x: PAD + 14 + 32, y: ANS_T + 26, 'font-size': 13.5 })
+  ]);
+  ansIn.appendChild(ansHead);
+  const bestBadge = G([
+    S('circle', { class: 'ui-ok-fill', cx: 0, cy: 0, r: 8.2 }),
+    S('path', { d: CHECK, fill: 'none', stroke: '#fff', 'stroke-width': 1.7, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })
+  ]);
+  const bestText = txt('En iyi cevap', { class: 'ui-ok', x: 11, y: 4.3, 'font-size': 13, 'font-weight': 600 });
+  const best = G([bestBadge, bestText], { transform: tr(W - PAD - 14 - 78, ANS_T + 22) });
+  ansIn.appendChild(best);
+
+  const aLines = [
+    'Ben Berlin’de üç hafta bekledim. Randevu',
+    'için sabah 07.00’de bakmak işe yarıyor;',
+    'evrak listesini de mesajla atayım.'
+  ].map((s, i) => txt(s, { class: 'ui-body', x: PAD + 14, y: ANS_T + 50 + i * 19, 'font-size': 13.5, opacity: 0 }));
+  aLines.forEach(e => ansIn.appendChild(e));
+
+  /* --- /avrupa hapı ve Soru Çözüldü --- */
+  const euW = 86;
+  const euPill = G([
+    S('rect', { class: 'ui-pill', x: 0, y: -13, width: euW, height: 26, rx: 13 }),
+    G([S('image', { href: AST + 'flags/avrupa.svg', x: -9, y: -9, width: 18, height: 18, 'clip-path': 'url(#obEuClip)' }),
+      S('circle', { class: 'ui-ring-thin', cx: 0, cy: 0, r: 9 })], { transform: tr(22, 0) }),
+    txt('/avrupa', { class: 'ui-name', x: 35, y: 4.3, 'font-size': 12.5 })
+  ]);
+  card.appendChild(euPill);
+
+  const solvedW = 112;
+  const solved = G([
+    S('rect', { class: 'ui-ok-fill', x: -solvedW / 2, y: -15, width: solvedW, height: 30, rx: 15 }),
+    txt('Soru Çözüldü', { class: 'ui-ok-ink', x: 0, y: 4.6, 'font-size': 13, 'text-anchor': 'middle' })
+  ], { opacity: 0 });
+  card.appendChild(solved);
+
+  /* --- oy · cevap · paylaş satırı --- */
+  const upCount = txt('4', { class: 'ui-up-t', x: 14, y: 4.6, 'font-size': 13.5, 'text-anchor': 'middle' });
+  const up = G([
+    S('rect', { class: 'ui-up', x: 0, y: -17, width: 58, height: 34, rx: 12 }),
+    upCount,
+    S('path', { class: 'ui-up-i', d: 'M0 -6.2 L6.2 0 L2.7 0 L2.7 5.6 L-2.7 5.6 L-2.7 0 L-6.2 0 Z', transform: tr(38, 0) })
+  ]);
+  card.appendChild(up);
+
+  const coCount = txt('0', { class: 'ui-mute', x: 15, y: 4.6, 'font-size': 13.5, 'text-anchor': 'middle', 'font-weight': 600 });
+  const coIcon = S('path', {
+    class: 'ui-ico',
+    d: 'M-5.4 -5 H5.4 A3.4 3.4 0 0 1 8.8 -1.6 V1.6 A3.4 3.4 0 0 1 5.4 5 H-1.6 L-6.6 8 L-5.6 4.7 A3.4 3.4 0 0 1 -8.8 1.6 V-1.6 A3.4 3.4 0 0 1 -5.4 -5 Z',
+    transform: tr(40, -1)
+  });
+  const comment = G([
+    S('rect', { class: 'ui-ghost', x: 0, y: -17, width: 58, height: 34, rx: 12 }),
+    coCount, coIcon
+  ]);
+  card.appendChild(comment);
+
+  const share = G([
+    S('rect', { class: 'ui-ghost', x: -19, y: -17, width: 38, height: 34, rx: 12 }),
+    S('path', { class: 'ui-ico', d: 'M-5 -1.2 V5.2 A2.2 2.2 0 0 0 -2.8 7.4 H2.8 A2.2 2.2 0 0 0 5 5.2 V-1.2' }),
+    S('path', { class: 'ui-ico', d: 'M0 3 V-7.4 M-3.1 -4.4 L0 -7.6 L3.1 -4.4' })
+  ]);
+  card.appendChild(share);
+
+  /* --- cevaplayanlar: karta doğru süzülen portreler --- */
+  const FLY = [
+    { img: 'people/kisi-3.jpg', from: [-34, 268], a: 1.15 },
+    { img: 'people/kisi-2.jpg', from: [428, 224], a: 1.65 },
+    { img: 'people/erkek-1.jpg', from: [432, 352], a: 2.15 }
+  ].map((f, i) => {
+    const e = bubble(`fly${i}`, 15, f.img);
+    set(e, 'opacity', 0);
     g.appendChild(e);
-    return { e, x: p[0], y: p[1] };
+    return Object.assign({ e }, f);
   });
 
-  const lns = nodes.map(n => {
-    const d = `M${n.x} ${n.y} Q${lerp(n.x, CX, .55).toFixed(1)} ${lerp(n.y, cardY, .3).toFixed(1)} ${CX} ${cardY}`;
-    const e = S('path', { class: 'ln', d: d, pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 });
-    links.appendChild(e);
-    return e;
-  });
-
-  const ask = skelCard(240, 96, [[20, 44, 132], [20, 58, 178], [20, 72, 96]], 18);
-  ask.insertBefore(S('circle', { class: 'nd', cx: -96, cy: -26, r: 7 }), ask.children[1]);
-  ask.appendChild(txt('Soru', { class: 't-brand', x: -80, y: -22, 'font-size': 12 }));
-  g.appendChild(ask);
-
-  const answers = [
-    { label: 'Vize', from: 0, y: 318 },
-    { label: 'Oturum', from: 1, y: 352 },
-    { label: 'Ev', from: 3, y: 386 }
-  ].map(a => {
-    const w = 210, h = 28;
-    const e = G([
-      S('rect', { class: 'card', x: -w / 2, y: -h / 2, width: w, height: h, rx: 10 }),
-      S('circle', { class: 'nd', cx: -w / 2 + 16, cy: 0, r: 4.4 }),
-      txt(a.label, { class: 't-ink', x: -w / 2 + 28, y: 4, 'font-size': 11.5 }),
-      S('rect', { class: 'sk', x: 8, y: -2.5, width: 70, height: 5, rx: 2.5 })
-    ]);
-    g.appendChild(e);
-    return { e, a };
-  });
-
-  const count = pill('3 tavsiye', 't-brand');
-  g.appendChild(count);
-
+  let laid = false;
   return { g, update(t) {
     g.setAttribute('opacity', envelope(t).toFixed(3));
 
-    const au = eBack(seg(t, 0, .62));
-    set(ask, 'transform', tr(CX, cardY + sn(t, SC) * 3, clamp(au)));
-    set(ask, 'opacity', clamp(seg(t, 0, .3)).toFixed(3));
+    /* ad metninin genişliği ancak DOM'a girince ölçülebilir; rozet bir kez
+       yerleşir, sonra sabit kalır. */
+    if (!laid) {
+      /* gizliyken ölçü 0 döner; o durumda rozet yerleşmemiş sayılır ve
+         görünür olduğu ilk karede yeniden denenir. */
+      const w = name.getComputedTextLength();
+      set(asked, 'transform', tr(PAD + AV * 2 + 10 + (w || 84) + 15, PAD + 8.5));
+      set(asked, 'opacity', w ? 1 : 0);
+      laid = w > 0;
+    }
 
-    nodes.forEach((n, i) => {
-      const u = eBack(seg(t, .45 + i * .1, 1.15 + i * .1));
-      set(n.e, 'transform', tr(n.x, n.y + sn(t, 2.4, i * .25) * 3.5, clamp(u)));
-      set(n.e, 'opacity', clamp(seg(t, .45 + i * .1, .8 + i * .1)).toFixed(3));
+    /* kart girişi */
+    const inU = eOut4(seg(t, 0, .9));
+    const open = eInOut(seg(t, 2.9, 4.3));
+    const L = layout(open);
+    set(plate, 'height', L.h.toFixed(1));
+    set(card, 'transform', tr(CL, MID - L.h / 2 + (1 - inU) * 22 + sn(t, 5.2) * 2, lerp(.94, 1, inU)));
+    set(card, 'opacity', clamp(seg(t, 0, .34)).toFixed(3));
+
+    /* cevap kutusu yukarıdan aşağı açılır, içindekiler sırayla belirir */
+    set(ansRect, 'height', Math.max(.01, ANS_H * open).toFixed(2));
+    set(ansBox, 'height', Math.max(.01, ANS_H * open).toFixed(2));
+    set(ans, 'opacity', (open > 0 ? 1 : 0).toFixed(3));
+    set(ansHead, 'opacity', clamp(seg(t, 3.15, 3.5)).toFixed(3));
+    aLines.forEach((e, i) => set(e, 'opacity', clamp(seg(t, 3.45 + i * .16, 3.8 + i * .16)).toFixed(3)));
+    const bu = eBack(seg(t, 4.35, 4.95));
+    set(best, 'transform', tr(W - PAD - 14 - 78, ANS_T + 22, clamp(bu)));
+    set(best, 'opacity', clamp(seg(t, 4.35, 4.6)).toFixed(3));
+
+    /* alt satırlar açılan kutuyla birlikte iner */
+    set(euPill, 'transform', tr(PAD, L.pillCY));
+    set(up, 'transform', tr(PAD, L.actCY));
+    set(share, 'transform', tr(W - PAD - 19, L.actCY));
+
+    const su = eBack(seg(t, 5.15, 5.8));
+    set(solved, 'transform', tr(W - PAD - solvedW / 2, L.pillCY, clamp(su)));
+    set(solved, 'opacity', clamp(seg(t, 5.15, 5.4)).toFixed(3));
+
+    /* cevaplar geldikçe sayaçlar döner */
+    let arrived = 0;
+    FLY.forEach(f => {
+      const u = eInOut(seg(t, f.a, f.a + .55));
+      const tx = CL + PAD + 66 + 40, ty = MID - L.h / 2 + L.actCY;
+      const px = lerp(f.from[0], tx, u), py = lerp(f.from[1], ty, u) - Math.sin(u * Math.PI) * 26;
+      set(f.e, 'transform', tr(px, py, lerp(1, .18, u * u)));
+      set(f.e, 'opacity', (u >= 1 ? 0 : clamp(seg(t, f.a, f.a + .18)) * (1 - u * u * .2)).toFixed(3));
+      if (u >= 1) arrived++;
     });
-
-    lns.forEach((l, i) => {
-      const d = eOut(seg(t, .95 + i * .09, 1.75 + i * .09));
-      set(l, 'stroke-dashoffset', (1 - d).toFixed(4));
-      set(l, 'opacity', (d * .5).toFixed(3));
-    });
-
-    answers.forEach((an, i) => {
-      const a = 1.3 + i * .22;
-      const u = eOut4(seg(t, a, a + .85));
-      const src = nodes[an.a.from];
-      set(an.e, 'transform', tr(lerp(src.x, CX, u), lerp(src.y, an.a.y, u), lerp(.5, 1, u)));
-      set(an.e, 'opacity', clamp(seg(t, a, a + .28)).toFixed(3));
-    });
-
-    const cu = eBack(seg(t, 2.65, 3.2));
-    set(count, 'transform', tr(CX, 432, clamp(cu)));
-    set(count, 'opacity', clamp(seg(t, 2.65, 2.9)).toFixed(3));
+    coCount.textContent = arrived;
+    upCount.textContent = 4 + Math.round(7 * clamp(seg(t, 1.2, 2.75)));
+    const bump = FLY.reduce((m, f) => Math.max(m, 1 - clamp(Math.abs(t - (f.a + .55)) / .22)), 0);
+    set(comment, 'transform', tr(PAD + 66, L.actCY, 1 + bump * .09));
   } };
 }
 
@@ -787,26 +988,26 @@ function scene4() {
 /* ═══════════ içerik ═══════════ */
 const COPY = [
   {
-    head: 'Avrupa’nın her yerinde bir tanıdığın var',
-    sub: 'Avrupa’da yaşayanlar ve gitmeyi planlayanlar için tek topluluk.',
+    head: 'Avrupa’nın her yerinde<br>bir tanıdığın var',
+    sub: 'Avrupa’da yaşayanlar ve gitmeyi planlayanlar<br>için tek topluluk.',
     cta: 'Devam et',
-    rows: [['Küre kadraja yükselir', 0, 1.9], ['Uçak kürenin çevresinde', .8, 4.9], ['Küre döner, Avrupa’da durur', 0, 6.5], ['Dalış ve Avrupa yakın planı', 4.9, 6.7], ['Uçak rotada', 6.7, 11.0], ['Kişiler ve rozetler', 6.8, 11.2], ['Sayfa hapları', 10.8, 11.5]]
+    rows: [['Küre kadraja yükselir', 0, 1.9], ['Uçak kürenin çevresinde', .8, 4.9], ['Küre döner, Avrupa’da durur', 0, 6.5], ['Dalış ve Avrupa yakın planı', 4.9, 6.7], ['Uçak rotada', 6.7, 11.0], ['Topluluk ağı', 7.4, 11.9], ['Kişiler ve rozetler', 6.8, 11.2]]
   },
   {
-    head: 'Sor, paylaş, tavsiye al',
-    sub: 'Vize, oturum, eğitim, ev, iş, seyahat, sağlık… Deneyimini paylaş, tavsiye ver, tavsiye iste.',
+    head: 'Sor, paylaş,<br>tavsiye al',
+    sub: 'Vize, oturum, eğitim, ev, iş, seyahat, sağlık…<br>Deneyimini paylaş, tavsiye ver, tavsiye iste.',
     cta: 'Devam et',
-    rows: [['Soru kartı', 0, .7], ['Topluluk düğümleri', .45, 1.45], ['Tavsiye akışı', .95, 2.6], ['Tavsiye sayacı', 2.65, 3.3]]
+    rows: [['Soru kartı', 0, .9], ['Topluluktan cevaplar', 1.15, 2.75], ['En iyi cevap açılır', 2.9, 4.4], ['Cevap metni', 3.15, 4.4], ['En iyi cevap rozeti', 4.35, 4.95], ['Soru çözüldü', 5.15, 5.8]]
   },
   {
-    head: 'Gündemi takip et, hiçbir şeyi kaçırma',
-    sub: 'Eğitim, vize, seyahat, haber… Sayfaları takip et, akışını kendine göre kur.',
+    head: 'Gündemi takip et,<br>hiçbir şeyi kaçırma',
+    sub: 'Eğitim, vize, seyahat, haber…<br>Sayfaları takip et, akışını kendine göre kur.',
     cta: 'Devam et',
     rows: [['Dağınık kartlar', 0, .8], ['Seçim ve ayrışma', .74, 1.95], ['Akışa yerleşme', 1.5, 2.4], ['Etiketler', 2.15, 3.15]]
   },
   {
-    head: 'Hizmetini veya İşletmeni binlerce kişiye kolayca ulaştır',
-    sub: 'Hem Avrupa’daki hem Türkiye’deki potansiyel müşterilerine tek yerden ulaş.',
+    head: 'İşletmeni binlerce kişiye<br>kolayca ulaştır',
+    sub: 'Hizmetini Avrupa’daki ve Türkiye’deki<br>müşterilerine tek yerden duyur.',
     cta: 'Hemen başla',
     rows: [['Hizmet kartı', 0, .7], ['Erişim dalgaları', .62, 2.6], ['Topluluk ızgarası', .86, 2.9], ['Erişim sayacı', .9, 3.05]]
   }
@@ -814,7 +1015,7 @@ const COPY = [
 const NOTES = {
   full: 'Dört ekran sırayla, birer kez oynar. Her ekran son karesinde 1,5 sn bekler, sonra sıradakine geçer; “Devam et” beklemeden geçirir. Son ekranda kalır, döngü yok.',
   1: 'Küre sağ alttan kadraja yükselir, uçak arkasından çıkıp çevresinde tur atar ve Avrupa’ya dalar; kamera onunla yakınlaşır. İkondaki uçak şehirlerin üzerinden geçtikçe noktalar büyür; içinden o şehirdeki kişi ve ülke rozeti çıkar.',
-  2: 'Soru kartı ortada durur; topluluk düğümlerinden gelen tavsiyeler kartın altına yığılır.',
+  2: 'Tasarımdaki gerçek gönderi kartı: soru ortada durur, topluluktan gelen cevaplar sayacı çevirir, en iyi cevap kartın içinde açılır ve gönderi “Soru Çözüldü” rozetini alır.',
   3: 'Altı başlıktan üçü seçilip tek sütuna iner, kalanlar arkaya çekilir; etiketler yerine oturur.',
   4: 'Hizmet kartı yayına girer; dalgalar topluluğa yayıldıkça düğümler ve sayaç büyür.'
 };
@@ -889,8 +1090,9 @@ function showScene(i) {
   if (i === shown) return;
   shown = i;
   const c = COPY[i];
-  $('#obHead').textContent = c.head;
-  $('#obSub').textContent = c.sub;
+  /* metinler sabit ve güvenli; satır sonları <br> ile, her biri tam iki satır */
+  $('#obHead').innerHTML = c.head;
+  $('#obSub').innerHTML = c.sub;
   $('#obCta').textContent = c.cta;
   [...$('#obDots').children].forEach((d, k) => d.classList.toggle('on', k === i));
 }
