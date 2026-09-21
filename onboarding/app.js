@@ -1332,7 +1332,8 @@ function scene4() {
   Object.entries(CITY).forEach(([k, ll]) => { const q = m4(ll); MAP[k] = [q[0], q[1]]; });
   const ORG = MAP.almanya;
   const mapG = G([], { opacity: 0 });
-  view.appendChild(mapG);
+  /* harita kartın ARKASINA: tanıtım gönderisi her zaman önde kalsın */
+  view.insertBefore(mapG, card);
   const land4 = S('path', { class: 'globe-land' });
   const path4 = d3.geoPath(m4);
   g.querySelector('defs').appendChild(
