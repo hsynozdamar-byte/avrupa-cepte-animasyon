@@ -1570,7 +1570,6 @@ function showScene(i) {
   $('#obHead').innerHTML = c.head;
   $('#obSub').innerHTML = c.sub;
   $('#obCta').textContent = c.cta;
-  [...$('#obDots').children].forEach((d, k) => d.classList.toggle('on', k === i));
 }
 
 /* extra: tam akışta ekranlar arası beklemede sahnenin yerel saati akmaya devam
