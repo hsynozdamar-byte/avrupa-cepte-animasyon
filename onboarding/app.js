@@ -996,7 +996,8 @@ function scene2() {
     const late = eOut(seg(t, 10.0, 11.25)) * 118;
     const cu = eOut4(seg(t, .48, 1.2));
     set(card, 'transform', tr(lerp(FX, UL, foc),
-      lerp(SLOT(1) + (1 - cu) * 46 - drift, TOP, foc) - late, lerp(FS2, 1, foc)));
+      lerp(SLOT(1) + (1 - cu) * 46 - drift, TOP, foc) - late
+        + Math.sin(t * .72) * 1.4 * seg(t, 9.9, 10.7), lerp(FS2, 1, foc)));
     set(card, 'opacity', clamp(seg(t, .48, .8)).toFixed(3));
     /* parıltı: cevap seçilirken, kutu açılırken ve rozetlerde */
     sparkBest.update(t, seg(t, 6.85, 7.25) * (1 - seg(t, 9.1, 9.4)));
@@ -1045,6 +1046,8 @@ function scene2() {
         const j = others.indexOf(r);
         y = Math.max(y, TOP + L.h + 12 + j * (RH + RG));
       }
+      /* yerleşen satırlar hafifçe süzülür: sohbet donmuş görünmez */
+      y += Math.sin(t * .85 + r.k * 1.1) * 1.5 * clamp(seg(t, r.a + .9, r.a + 1.5));
       y -= late;
       op *= 1 - seg(y, 470, 510);
       set(r.e, 'transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${(r.side * 3 * (1 - ue)).toFixed(2)}) scale(${s.toFixed(4)})`);
@@ -1189,7 +1192,7 @@ function scene3() {
     /* dönüş açısı: duraklarda hafif salınım, ekran hiç donmuyor */
     let rot = ROT0;
     TURN.forEach((w, i) => { if (t >= w[0]) rot = lerp(i ? STOP[i - 1] : ROT0, STOP[i], eInOut(seg(t, w[0], w[1]))); });
-    rot += Math.sin(t * 1.15) * 3.4;
+    rot += Math.sin(t * 1.15) * 3.4 - Math.max(0, t - 9.6) * 2.6;   /* sonda yavaşça dönmeyi sürdürür */
     set(halo, 'opacity', (gather * .3).toFixed(3));
     set(halo, 'transform', tr(0, Math.sin(t * .9) * 2.2));
 
@@ -1434,7 +1437,7 @@ function scene4() {
       set(p.e, 'transform', tr(lerp(mx, p.x, fly), lerp(my, AY, fly) + (1 - u) * 8, u * lerp(1.34, 1, fly)));
       set(p.e, 'opacity', clamp(seg(t, p.a, p.a + .18)).toFixed(3));
     });
-    const n = Math.round(eOut(seg(t, 6.4, 11.7)) * 1248) * 10;
+    const n = Math.round(eOut(seg(t, 6.4, 11.7)) * 1248) * 10 + Math.floor(Math.max(0, t - 11.7) * 5) * 10;
     reach.textContent = n.toLocaleString('tr-TR') + ' kişi gördü';
     set(reach, 'opacity', clamp(seg(t, 6.45, 6.8)).toFixed(3));
     set(reachSub, 'opacity', clamp(seg(t, 6.6, 6.95)).toFixed(3));
@@ -1507,6 +1510,9 @@ const scenes = builders.map(b => {
 let mode = 'full';
 let dur = TOTAL;
 let t = 0, playing = false, speed = 1, last = 0, shown = -1, holdUntil = 0;
+/* Sahne bitince zaman çizelgesi son karede durur ama sahnenin yerel saati
+   akmaya devam eder (idle): parıltı, salınım, dalga sürer, kare donmaz. */
+let idle = 0;
 const HOLD = 1.5;                  /* tam akışta ekranlar arası bekleme (sn) */
 const progEls = [...$('#obProg').children].map(i => i.firstElementChild);
 
@@ -1672,7 +1678,7 @@ function tick(now) {
     last = now;
     if (holdUntil) {
       /* tam akış: ekranın son karesinde kısa bekleme, sonra sıradaki ekran */
-      if (now >= holdUntil) { holdUntil = 0; t = STARTS[sceneAt(t) + 1]; render(t); }
+      if (now >= holdUntil) { holdUntil = 0; idle = 0; t = STARTS[sceneAt(t) + 1]; render(t); }
       else render(t, HOLD - (holdUntil - now) / 1000);
     } else {
       const i = sceneAt(t);
@@ -1681,11 +1687,11 @@ function tick(now) {
         const end = STARTS[i] + DURS[i] - 1e-3;
         if (t >= end) {
           t = end;
-          if (i < 3) holdUntil = now + HOLD * 1000 / speed;
-          else setPlaying(false);            /* son ekranda kalır, döngü yok */
-        }
-      } else if (t >= dur) { t = dur; setPlaying(false); }
-      render(t);
+          if (i < 3) { holdUntil = now + HOLD * 1000 / speed; idle = 0; }
+          else idle += dt * speed;           /* son ekran: durmaz, akmaya devam eder */
+        } else idle = 0;
+      } else if (t >= dur) { t = dur; idle += dt * speed; } else idle = 0;
+      render(t, idle);
     }
   } else last = now;
   requestAnimationFrame(tick);

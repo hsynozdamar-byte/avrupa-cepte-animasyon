@@ -41,15 +41,6 @@ const scenes = [
     sidebarDesc: 'Küre yaklaşır, şehirler aydınlanır.<br>Başarın verilerle taçlanır.',
     noteTitle: 'Görkemli yayılım &<br>başarı hissi.',
     note: 'Küre merkezden bize doğru yaklaşarak yerini başarı grafiğine ve onay anına bırakır. Canlı sayaçlar, katılım bildirimleri ve nabız efektleri anın heyecanını taşır.'
-  },
-  {
-    title: '3X Büyüme ile<br>zirveye çık.',
-    subtitle: 'Premium paket ile 5 sayfaya kadar yayınla, 3 kat daha fazla etkileşim kazan.',
-    duration: 10,
-    sidebarHeading: 'Daha fazla sayfaya<br>mı ihtiyacın var?',
-    sidebarDesc: 'Premium ile tanıtımını daha fazla<br>toplulukta göster, 3x büyü.',
-    noteTitle: '3X Büyüme &<br>Avrupa Etkisi.',
-    note: 'Figma modal ekranındaki gri alanda Avrupa haritası, 4 topluluk balonu ve 3x büyüme grafiği canlanır.'
   }
 ];
 
@@ -58,7 +49,7 @@ let auto = false, all = false, speed = 1, time = 0, motionTime = 0, last = 0, la
 let sceneRealTime = 0;
 let globeVis = 1;
 
-const bubbles = [[], [], [], []], phones = [], canvases = [], contexts = [];
+const bubbles = [[], [], []], phones = [], canvases = [], contexts = [];
 const $ = s => document.querySelector(s);
 function el(tag, cls, html = '') {
   const e = document.createElement(tag);
@@ -109,101 +100,11 @@ scenes.forEach((s, i) => {
     if (skipBtn) skipBtn.onclick = () => selectScene(2);
     
     if (isFinalTanitim) {
-      phone.querySelector('.phone-cta').onclick = () => selectScene(3);
+      phone.querySelector('.phone-cta').onclick = () => toast('Tanıtım oluşturma akışı başlatılıyor…');
     }
 
     const cv = phone.querySelector('canvas'), dpr = Math.min(devicePixelRatio || 1, 2);
     cv.width = 393 * dpr; cv.height = 852 * dpr;
-    const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
-    canvases.push(cv); contexts.push(ctx);
-  } else {
-    // Sahne 04: Figma Premium Modal Ekranı (media_1789069975401.png ile 1:1)
-    phone = el('article', 'phone phone-modal-view',
-      `<div class="status" aria-hidden="true"><span>9:41</span><span class="status-levels"><img src="${A}s0-imgCellularConnection.svg" alt=""><img src="${A}s0-imgWifi.svg" alt=""><span class="battery"></span></span></div>` +
-      `<nav class="modal-phone-nav">` +
-        `<button class="nav-back-btn" aria-label="Geri"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>` +
-        `<strong>Tanıtım</strong>` +
-      `</nav>` +
-      `<div class="segments-6" aria-hidden="true"><span><i></i></span><span></span><span></span><span></span><span></span><span></span></div>` +
-      `<div class="modal-standard-caption">Standart • 0/1 sayfa seçebilirsin</div>` +
-      `<div class="modal-sheet-card">` +
-        `<div class="sheet-header-row">` +
-          `<h3>Daha fazla sayfaya mı ihtiyacın var?</h3>` +
-          `<button class="sheet-close-icon" aria-label="Kapat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>` +
-        `</div>` +
-        `<!-- GRİ ALAN: 3X BÜYÜME VEKTÖR HARİTA ANİMASYONU -->` +
-        `<div class="modal-anim-graybox">` +
-          `<canvas class="graybox-canvas" aria-hidden="true"></canvas>` +
-          `<div class="gb-cloud gb-cloud-tl"></div><div class="gb-cloud-bl"></div><div class="gb-cloud-br"></div>` +
-          `<!-- Merkez AB Hub -->` +
-          `<div class="gb-eu-hub">` +
-            `<div class="gb-eu-pulse"></div>` +
-            `<div class="gb-eu-core">` +
-              `<svg class="gb-eu-stars" viewBox="0 0 40 40">` +
-                `<g fill="#ffcc00" transform="translate(20,20)">` +
-                  Array.from({length: 12}, (_, k) => {
-                    const angle = (k * 30 - 90) * Math.PI / 180;
-                    const sx = Math.cos(angle) * 12.5, sy = Math.sin(angle) * 12.5;
-                    return `<polygon points="${sx},${sy-2.4} ${sx+1.5},${sy+1.8} ${sx-2.3},${sy-0.8} ${sx+2.3},${sy-0.8} ${sx-1.5},${sy+1.8}"/>`;
-                  }).join('') +
-                `</g>` +
-              `</svg>` +
-            `</div>` +
-          `</div>` +
-          `<!-- 4 Yüzen Topluluk Baloncuğu -->` +
-          `<div class="gb-bubble gb-b-nl" id="gb-b-nl">` +
-            `<div class="gb-bubble-inner"><img src="${A}netherlands_windmill.jpg" alt="Hollanda"></div>` +
-            `<div class="gb-pill"><img class="pill-flag" src="${A}flag-netherlands.svg" alt="Hollanda bayrağı"><span>Hollanda</span></div>` +
-          `</div>` +
-          `<div class="gb-bubble gb-b-de" id="gb-b-de">` +
-            `<div class="gb-bubble-inner"><img src="${A}germany_landmark.jpg" alt="Berlin"></div>` +
-            `<div class="gb-pill"><img class="pill-flag" src="${A}flag-germany.svg" alt="Almanya bayrağı"><span>Berlin</span></div>` +
-          `</div>` +
-          `<div class="gb-bubble gb-b-er" id="gb-b-er">` +
-            `<div class="gb-bubble-inner"><img src="${A}erasmus_university.jpg" alt="Erasmus"></div>` +
-            `<div class="gb-pill"><span class="pill-emoji">🎓</span><span>Erasmus</span></div>` +
-          `</div>` +
-          `<div class="gb-bubble gb-b-alp" id="gb-b-alp">` +
-            `<div class="gb-bubble-inner"><img src="${A}alps_mountains.jpg" alt="Doğa"></div>` +
-            `<div class="gb-pill"><span class="pill-emoji">⛰️</span><span>Doğa</span></div>` +
-          `</div>` +
-          `<!-- 3X Büyüme Bar Grafiği Montajı -->` +
-          `<div class="gb-chart-assembly">` +
-            `<div class="gb-crown-group">` +
-              `<svg class="gb-crown-svg" viewBox="0 0 24 24" fill="#ffb700"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>` +
-              `<span class="gb-3x-text">3x</span>` +
-            `</div>` +
-            `<div class="gb-bars-container">` +
-              `<div class="gb-bar-track"><div class="gb-3d-bar" data-h="28"><div class="gb-bar-front"></div><div class="gb-bar-top"></div><div class="gb-bar-side"></div></div></div>` +
-              `<div class="gb-bar-track"><div class="gb-3d-bar" data-h="42"><div class="gb-bar-front"></div><div class="gb-bar-top"></div><div class="gb-bar-side"></div></div></div>` +
-              `<div class="gb-bar-track"><div class="gb-3d-bar" data-h="60"><div class="gb-bar-front"></div><div class="gb-bar-top"></div><div class="gb-bar-side"></div></div></div>` +
-              `<div class="gb-bar-track"><div class="gb-3d-bar" data-h="84"><div class="gb-bar-front"></div><div class="gb-bar-top"></div><div class="gb-bar-side"></div></div></div>` +
-              `<div class="gb-bar-track"><div class="gb-3d-bar" data-h="112"><div class="gb-bar-front"></div><div class="gb-bar-top"></div><div class="gb-bar-side"></div></div></div>` +
-            `</div>` +
-            `<svg class="gb-arrow-curve" viewBox="0 0 140 140" fill="none"><path d="M 12 112 Q 55 98 106 32" stroke="#0055ff" stroke-width="4.5" stroke-linecap="round" fill="none"/><polygon points="106,18 118,34 98,38" fill="#0055ff"/></svg>` +
-          `</div>` +
-          `<!-- Vektör Uçak -->` +
-          `<div class="gb-airplane"><svg viewBox="0 0 24 24" fill="#6ba6ff" width="22" height="22"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></div>` +
-        `</div>` +
-        `<!-- Modal Sheet Alt Kısımları -->` +
-        `<h4 class="sheet-subhead">Premium’da 5 sayfaya kadar yayınla.</h4>` +
-        `<p class="sheet-desc">Standard paketle yalnızca 1 sayfa seçebilirsin. Premium ile tanıtımını daha fazla toplulukta göster.</p>` +
-        `<div class="sheet-benefit-list">` +
-          `<div class="sheet-benefit-card"><div class="sbc-icon"><svg viewBox="0 0 24 24" fill="#0055ff"><rect x="3" y="12" width="4" height="9" rx="1.5"/><rect x="10" y="7" width="4" height="14" rx="1.5"/><rect x="17" y="3" width="4" height="18" rx="1.5"/></svg></div><span class="sbc-text">3x daha fazla erişim</span><svg class="sbc-crown" viewBox="0 0 24 24" fill="#0055ff"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg></div>` +
-          `<div class="sheet-benefit-card"><div class="sbc-icon"><svg viewBox="0 0 24 24" fill="#0055ff"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><span class="sbc-text">5 sayfaya kadar yayınla</span><svg class="sbc-crown" viewBox="0 0 24 24" fill="#0055ff"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg></div>` +
-          `<div class="sheet-benefit-card"><div class="sbc-icon"><svg viewBox="0 0 24 24" fill="#0055ff"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><span class="sbc-text">3 kat daha fazla etkileşim</span><svg class="sbc-crown" viewBox="0 0 24 24" fill="#0055ff"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg></div>` +
-        `</div>` +
-        `<a href="#" class="sheet-link">1 sayfayla devam et</a>` +
-        `<button class="sheet-cta-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="#ffcc00"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg><span>Premiuma geç</span></button>` +
-      `</div>`);
-
-    phone.querySelector('.nav-back-btn').onclick = () => selectScene(2);
-    phone.querySelector('.sheet-close-icon').onclick = () => selectScene(0);
-    phone.querySelector('.sheet-link').onclick = e => { e.preventDefault(); selectScene(0); };
-    phone.querySelector('.sheet-cta-btn').onclick = () => toast('Premium tanıtım akışı başlatılıyor...');
-
-    const cv = phone.querySelector('.graybox-canvas'), dpr = Math.min(devicePixelRatio || 1, 2);
-    cv.width = 353 * dpr; cv.height = 235 * dpr;
     const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
     canvases.push(cv); contexts.push(ctx);
   }
@@ -624,145 +525,6 @@ function drawScene3(t, iT) {
   }
 }
 
-/* ── SAHNE 4 (04 3X Büyüme): Gri Alan İçinde Vektör Harita & 3X Grafiği ── */
-const gbProj = d3.geoMercator().scale(165).center([13, 51.5]).translate([115, 110]);
-const gbPins = [
-  { coords: [-3.7, 40.4] }, // Madrid
-  { coords: [2.35, 48.8] }, // Paris
-  { coords: [-.12, 51.5] }, // Londra
-  { coords: [12.5, 41.9] }, // Roma
-  { coords: [13.4, 52.5] }  // Berlin
-];
-
-// Merkez AB Hub: (112, 104)
-const gbHubPos = [112, 104];
-const gbTargets = [
-  { pos: [43, 41], ctrl: [75, 60] },     // Hollanda (gb-b-nl)
-  { pos: [181, 39], ctrl: [155, 60] },   // Berlin (gb-b-de)
-  { pos: [39, 157], ctrl: [70, 140] },   // Erasmus (gb-b-er)
-  { pos: [181, 161], ctrl: [155, 145] }, // Doğa (gb-b-alp)
-  { pos: [248, 115], ctrl: [185, 95] }   // 3X Bar Chart
-];
-
-const gbBars = [...phones[3].querySelectorAll('.gb-3d-bar')];
-const gbCrown = phones[3].querySelector('.gb-crown-svg');
-const gbAirplane = phones[3].querySelector('.gb-airplane');
-const gbBubbles = [
-  $('#gb-b-nl'),
-  $('#gb-b-de'),
-  $('#gb-b-er'),
-  $('#gb-b-alp')
-];
-
-function drawScene4(t, iT) {
-  const ctx = contexts[3];
-  ctx.clearRect(0, 0, 353, 235);
-
-  const path = d3.geoPath(gbProj, ctx);
-
-  // 1. Zemin Işıltısı (Merkez Mavi Parıltı)
-  const bgGlow = ctx.createRadialGradient(112, 104, 20, 112, 104, 160);
-  bgGlow.addColorStop(0, 'rgba(0, 100, 255, 0.16)');
-  bgGlow.addColorStop(0.7, 'rgba(0, 85, 255, 0.05)');
-  bgGlow.addColorStop(1, 'rgba(255, 255, 255, 0)');
-  ctx.fillStyle = bgGlow;
-  ctx.fillRect(0, 0, 353, 235);
-
-  // 2. Avrupa Haritası (3D Relief Görünüm)
-  if (land) {
-    ctx.save();
-    ctx.translate(2, 5);
-    ctx.beginPath(); path(land);
-    ctx.fillStyle = 'rgba(0, 50, 150, 0.12)';
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.beginPath(); path(land);
-    const lg = ctx.createLinearGradient(40, 20, 240, 200);
-    lg.addColorStop(0, '#7eb6ff');
-    lg.addColorStop(0.5, '#408eff');
-    lg.addColorStop(1, '#1a6ce6');
-    ctx.fillStyle = lg;
-    ctx.fill();
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  // 3. Konum İğneleri (Pulsing Pins)
-  gbPins.forEach((pin, i) => {
-    const pt = gbProj(pin.coords);
-    if (!pt) return;
-    const pulse = (t * 0.9 + i * 0.25) % 1;
-
-    ctx.beginPath();
-    ctx.arc(pt[0], pt[1], 3 + pulse * 10, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(0, 85, 255, ${(1 - pulse) * 0.55})`;
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(pt[0], pt[1], 3.5, 0, Math.PI * 2);
-    ctx.fillStyle = '#0055ff';
-    ctx.fill();
-    ctx.lineWidth = 1.5;
-    ctx.strokeStyle = '#ffffff';
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(pt[0], pt[1], 1.5, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
-    ctx.fill();
-  });
-
-  // 4. Merkez AB Hub'ından Çıkan Beyaz Kesikli Işık Hatları & Işık Paketleri
-  gbTargets.forEach((tg, i) => {
-    const p0 = gbHubPos;
-    const p2 = tg.pos;
-    const ctrl = tg.ctrl;
-
-    ctx.beginPath();
-    ctx.moveTo(...p0);
-    ctx.quadraticCurveTo(...ctrl, ...p2);
-    ctx.lineWidth = i === 4 ? 2.6 : 1.8;
-    ctx.strokeStyle = i === 4 ? 'rgba(0, 110, 255, 0.8)' : 'rgba(255, 255, 255, 0.9)';
-    ctx.setLineDash([4, 4]);
-    ctx.lineDashOffset = -t * (i === 4 ? 12 : 8);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    const pktPos = (t * 0.55 + i * 0.2) % 1;
-    pkt(ctx, p0, ctrl, p2, pktPos, 1, '#ffffff', i === 4 ? 2.8 : 2.2);
-  });
-
-  // 5. DOM Elemanlarının Canlı Hareketi
-  gbBubbles.forEach((bEl, i) => {
-    if (bEl) {
-      const fy = Math.sin(t * 1.8 + i * 1.2) * 4;
-      bEl.style.transform = `translateY(${fy.toFixed(2)}px)`;
-    }
-  });
-
-  gbBars.forEach((bar, j) => {
-    const baseH = [24, 38, 56, 78, 106][j];
-    const wave = 0.88 + Math.sin(t * 2.2 + j * 0.55) * 0.12;
-    bar.style.height = `${(baseH * wave).toFixed(1)}px`;
-  });
-
-  if (gbCrown) {
-    gbCrown.style.transform = `translateY(${Math.sin(t * 2.2) * 3}px)`;
-  }
-
-  if (gbAirplane) {
-    const aT = (t * 0.25) % 1;
-    const ax = 12 + aT * 70;
-    const ay = 85 - Math.sin(aT * Math.PI) * 25;
-    gbAirplane.style.transform = `translate(${ax.toFixed(1)}px, ${ay.toFixed(1)}px) rotate(${22 - aT * 8}deg)`;
-  }
-}
-
 function render(t) {
   const iT = sceneRealTime;
   const curDur = scenes[active].duration;
@@ -792,7 +554,7 @@ function render(t) {
         if (all) {
           seg.style.width = `${(pRatio * 100).toFixed(1)}%`;
         } else {
-          seg.style.width = (active === 3) ? `${(pRatio * 100).toFixed(1)}%` : '100%';
+          seg.style.width = '100%';
         }
       });
     }
@@ -814,7 +576,6 @@ function render(t) {
       drawNetwork(t, introT);
     }
     if (i === 2) drawScene3(t, introT);
-    if (i === 3) drawScene4(t, introT);
   });
 
   $('#scrubber').value = time / curDur * 1000;
@@ -848,20 +609,6 @@ function selectScene(i) {
       [{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'translateY(0)' }],
       { duration: 350, easing: 'cubic-bezier(.22,1,.36,1)' }
     );
-    // Premium sheet sahneye alttan kayarak girer, avantaj kartları kademeli belirir.
-    if (active === 3) {
-      const sheet = phones[3].querySelector('.modal-sheet-card');
-      if (sheet) sheet.animate(
-        [{ transform: 'translateY(64px)', opacity: .4 }, { transform: 'translateY(0)', opacity: 1 }],
-        { duration: 550, easing: 'cubic-bezier(.22,1,.36,1)' }
-      );
-      phones[3].querySelectorAll('.sheet-benefit-card').forEach((card, k) => {
-        card.animate(
-          [{ opacity: 0, transform: 'translateY(14px) scale(.98)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }],
-          { duration: 450, delay: 200 + k * 90, easing: 'cubic-bezier(.22,1,.36,1)' }
-        );
-      });
-    }
   }
 }
 
@@ -932,19 +679,11 @@ function tick(now) {
       if (active < 2) {
         // Tanıtım akışında süre dolunca otomatik sonraki ekrana geç
         selectScene(active + 1);
-      } else if (active === 2) {
-        // Son tanıtım ekranında (Sesini duyur) buton hazır halde bekle
-        if (auto) {
-          selectScene(3);
-        } else {
-          time = scenes[active].duration;
-        }
-      } else if (active === 3) {
-        if (auto) {
-          selectScene(0);
-        } else {
-          time = scenes[active].duration;
-        }
+      } else {
+        /* Son ekran (03 Sesini duyur): otomatik akışta başa döner, elle
+           oynatılırken son karede bekler. */
+        if (auto) selectScene(0);
+        else time = scenes[active].duration;
       }
     }
   }
