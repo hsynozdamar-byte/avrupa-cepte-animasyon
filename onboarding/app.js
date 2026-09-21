@@ -374,7 +374,7 @@ function scene1() {
      Elle konulmuş seyrek noktalar bırakıldı; roundCorners onlarda düz parça +
      kısa yay ürettiği için dönüş basamaklı hissediliyordu (0,1 sn sabit açı,
      sonra 0,07 sn'de 34° savrulma). Aşağıdan U dönüşü de bırakıldı: metin
-     548'de başladığı için altta ~110px yer var, yarıçap uçaktan küçük kalıyor.
+     580'de başladığı için altta ~140px yer var, yarıçap uçaktan küçük kalıyor.
      Bu yol şehir baloncuklarının arasından da geçmez, sol kenarı kullanır. */
   const exitTail = (() => {
     const last = cities[cities.length - 1];
@@ -839,7 +839,7 @@ function scene2() {
   const H0 = layout(0).h;
 
   const view = G([], { mask: 'url(#obView2)' });
-  g.appendChild(S('defs', null, viewMask('obView2', 58, 552, 30)));
+  g.appendChild(S('defs', null, viewMask('obView2', 58, 584, 30)));
   g.appendChild(view);
 
   /* --- akış: gönderiler tek tek girer (kaydırma yok), soru aralarından öne çıkar.
@@ -1066,7 +1066,7 @@ function scene3() {
   const g = G([]);
   const view = G([], { mask: 'url(#obView3)' });
   g.appendChild(S('defs', null, [
-    ...viewMask('obView3', 58, 552, 30),
+    ...viewMask('obView3', 58, 584, 30),
     S('clipPath', { id: 'obNewsImg' }, S('rect', { x: 12, y: 12, width: 88, height: 88, rx: 14 }))
   ]));
   g.appendChild(view);
@@ -1260,7 +1260,7 @@ function scene4() {
   const g = G([]);
   const view = G([], { mask: 'url(#obView4)' });
   g.appendChild(S('defs', null, [
-    ...viewMask('obView4', 58, 552, 30),
+    ...viewMask('obView4', 58, 584, 30),
     S('clipPath', { id: 'obPromoImg' }, S('rect', { x: PAD, y: 110, width: UW - PAD * 2, height: 128, rx: 14 })),
     S('linearGradient', { id: 'obPromoShade', x1: 0, y1: 0, x2: 0, y2: 1 }, [
       S('stop', { offset: .45, 'stop-color': '#000', 'stop-opacity': 0 }),

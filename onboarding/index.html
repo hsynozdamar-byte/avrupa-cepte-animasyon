@@ -23,17 +23,22 @@
   /* hikâye çubuğu: her ekran için bir dilim, dolunca sıradakine geçilir.
      Dilim ekran süresi + geçiş beklemesi boyunca dolar, yani tam dolduğu an
      geçiş olur; boşa dolmuş bekleyen çubuk kalmaz. */
-  .prog { left: 24px; top: 58px; width: 345px; display: flex; gap: 4px; }
+  .prog { left: 24px; top: 58px; width: 283px; display: flex; gap: 4px; }
   .prog i { flex: 1; height: 3px; border-radius: 2px; background: var(--line); overflow: hidden; }
   .prog i b { display: block; height: 100%; width: 0; border-radius: 2px; background: var(--brand); }
 
   .skip, .cta { cursor: pointer; }
+  /* Atla: çubukla aynı satırda, sağ uçta. Eskiden çubuğun hemen altındaydı ve
+     sanatın üstüne biniyordu. */
   .skip {
-    right: 24px; top: 70px; margin: 0;
-    font-size: 14px; font-weight: 600; color: var(--muted);
+    right: 24px; top: 51px; margin: 0;
+    font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: -.01em;
   }
 
-  .copy { left: 24px; top: 548px; width: 345px; }
+  /* Metin bloğu: 580 + (67 başlık + 14 + 45 alt metin) = 706, butona 26px.
+     Eskiden 548'de duruyordu, nokta göstergesi kalkınca altta 58px boşluk
+     kalıyordu. */
+  .copy { left: 24px; top: 580px; width: 345px; }
   .copy h3 {
     margin: 0 0 14px;
     font-size: 30px; line-height: 1.12; letter-spacing: -.035em; font-weight: 700;
