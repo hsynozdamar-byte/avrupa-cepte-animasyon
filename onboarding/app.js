@@ -1,5 +1,5 @@
 /* Avrupa Cepte — Onboarding akışı
-   Dört karşılama ekranı, 393×852. Süreler: 11,8 / 11,5 / 11,5 / 12 sn.
+   Dört karşılama ekranı, 393×852. Dördü de 10 sn.
    Ekranlar arası beklemede sahnenin yerel saati akmaya devam eder: son kare
    donmaz, geçiş döngü gibi akar.
    01 küre, rota ve portrelerle; 02–04 tasarım dosyasındaki gerçek arayüz
@@ -8,10 +8,10 @@
 'use strict';
 
 const NS = 'http://www.w3.org/2000/svg';
-const D1 = 11.8;                /* 01 · küre, rota ve sağa kıvrılıp uzaklaşan uçak */
-const D2 = 11.5;                /* 02 · akış dolar, soru öne çıkar, cevaplar gelir */
-const D3 = 11.5;                /* 03 · sayfa seçimi, konu küresi ve haberler */
-const D4 = 12.0;                /* 04 · tanıtım paylaşılır, Avrupa'ya dağılır, istatistik */
+const D1 = 10.0;                /* 01 · küre, rota ve sağa kıvrılıp uzaklaşan uçak */
+const D2 = 10.0;                /* 02 · akış dolar, soru öne çıkar, cevaplar gelir */
+const D3 = 10.0;                /* 03 · sayfa seçimi, konu küresi ve haberler */
+const D4 = 10.0;                /* 04 · tanıtım paylaşılır, Avrupa'ya dağılır, istatistik */
 const CX = 196.5, CY = 272;     /* sanat alanının merkezi */
 
 /* ---------- yardımcılar ---------- */
@@ -126,15 +126,15 @@ function flagBadge(flag, label) {
 
 /* İlk ekranın zaman çizelgesi (sn). Buton ile geçildiği için acele yok. */
 const T1 = {
-  globeIn: [0, 1.55],      /* küre sağ alttan kadraja yükselir */
-  orbit: [.65, 4.0],       /* uçak kürenin arkasından çıkar, 1,5 tur atar */
-  dive: [4.0, 5.45],       /* uçak Avrupa'ya dalar, kamera onunla yakınlaşır */
-  zoom: [4.0, 5.45],
-  spin: [0, 5.3],          /* küre döner, Avrupa'da durur */
-  tilt: [3.2, 5.3],
-  dots: 4.75,              /* şehir noktaları */
-  fly: [5.45, 11.1],       /* rota uçuşu, şehirlerde yavaşlar */
-  flyby: 1.7,              /* çıkış: ön planda sağa kıvrılır, sağ üstten uzaklaşır */
+  globeIn: [0, 1.2],       /* küre sağ alttan kadraja yükselir */
+  orbit: [.5, 3.1],        /* uçak kürenin arkasından çıkar, 1,5 tur atar */
+  dive: [3.1, 4.3],        /* uçak Avrupa'ya dalar, kamera onunla yakınlaşır */
+  zoom: [3.1, 4.3],
+  spin: [0, 4.2],          /* küre döner, Avrupa'da durur (dönüş hızlandı) */
+  tilt: [2.4, 4.2],
+  dots: 3.7,               /* şehir noktaları */
+  fly: [4.3, 9.4],         /* rota uçuşu, şehirlerde yavaşlar */
+  flyby: 1.55,             /* çıkış: ön planda sağa kıvrılır, sağ üstten uzaklaşır */
   end: D1
 };
 
@@ -397,8 +397,13 @@ function scene1() {
   set(trailReveal, 'd', routeD);
 
   /* parıltı: şehirler uyandıkça topluluğun üstünde çakar, son saniyelerde sürer */
-  const sparkCity = sparkles(cities.map((c, i) => [c.x + (i % 2 ? 27 : -27), c.y - 28 - (i % 3) * 7, .85, (i * .19) % 1]));
+  const sparkCity = sparkles(cities.map((c, i) => [c.x + (i % 2 ? 27 : -27), c.y - 28 - (i % 3) * 7, .85, (i * .19) % 1])
+    .concat([[CX - 128, 214, .7, .12], [CX + 132, 246, .75, .58], [CX - 96, 452, .7, .83], [CX + 108, 436, .65, .35]]));
   g.appendChild(sparkCity.g);
+  /* küre kadraja girerken çevresinde ışık: ilk saniyeler de boş kalmasın */
+  const sparkGlobe = sparkles([[GX - 142, GY - 96, 1, 0], [GX + 146, GY - 52, .85, .3], [GX - 118, GY + 104, .8, .55],
+    [GX + 124, GY + 92, .9, .78], [GX + 8, GY - 146, .75, .16], [GX - 34, GY + 150, .7, .92]]);
+  g.appendChild(sparkGlobe.g);
 
   /* ---- uçak ---- */
   const plane = makePlane();
@@ -664,7 +669,8 @@ function scene1() {
       set(n.ring, 'transform', tr(n.x, n.y, .4 + rp * 1.4));
       set(n.ring, 'opacity', (rp > 0 && rp < 1 ? (1 - rp) * .6 : 0).toFixed(3));
     });
-    sparkCity.update(t, seg(t, 7.0, 7.8));   /* sonda sönmüyor: bekleme ölü kalmasın */
+    sparkCity.update(t, seg(t, 5.4, 6.2));   /* sonda sönmüyor: bekleme ölü kalmasın */
+    sparkGlobe.update(t, seg(t, .55, 1.15) * (1 - seg(t, 3.1, 3.7)));
   } };
 }
 
@@ -851,13 +857,13 @@ function scene2() {
   const SLOT = i => TOP + i * SP;
   const fills = [
     { img: 'kisi-2.jpg', name: 'Selin Aydın', kind: 'Haber', meta: 'Brüksel • 1s', page: ['/schengen vizesi', '✈️'], up: 38, co: 12,
-      lines: ['Schengen’de yeni giriş-çıkış sistemi:', 'bilmen gereken beş şey.'], slot: 0, a: .15 },
+      lines: ['Schengen’de yeni giriş-çıkış sistemi:', 'bilmen gereken beş şey.'], slot: 0, a: .12 },
     { img: 'erkek-1.jpg', name: 'Mert Şahin', kind: 'Sordu', meta: 'Rotterdam • 3s', page: ['/hollanda', 'hollanda'], up: 9, co: 6,
-      lines: ['Rotterdam’da uygun oda arayan var mı?', 'Birlikte ev tutabiliriz.'], slot: 2, a: .8 },
+      lines: ['Rotterdam’da uygun oda arayan var mı?', 'Birlikte ev tutabiliriz.'], slot: 2, a: .62 },
     { img: 'kisi-5.jpg', name: 'Emre Kaya', kind: 'Paylaştı', meta: 'Viyana • 5s', page: ['/kariyer', '💼'], up: 21, co: 7,
-      lines: ['Viyana’da mülakat sürecim: üç turda', 'neler soruldu?'], slot: 3, a: 1.14 },
+      lines: ['Viyana’da mülakat sürecim: üç turda', 'neler soruldu?'], slot: 3, a: .9 },
     { img: 'kisi-4.jpg', name: 'Can Demir', kind: 'Sordu', meta: 'Münih • 7s', page: ['/almanya', 'almanya'], up: 14, co: 5,
-      lines: ['Münih’te Anmeldung randevusu', 'ne kadar sürede çıkıyor?'], slot: 4, a: 1.48 }
+      lines: ['Münih’te Anmeldung randevusu', 'ne kadar sürede çıkıyor?'], slot: 4, a: 1.18 }
   ].map(o => { const e = feedPost(o); view.appendChild(e); return Object.assign({ e }, o); });
 
   /* --- soru kartı --- */
@@ -919,13 +925,13 @@ function scene2() {
 
   /* --- cevaplar: her biri başka bir şehirden, yazılarak gelir --- */
   const REPLIES = [
-    { img: 'kisi-4.jpg', name: 'Can D.', flag: 'almanya', city: 'Münih', text: 'Randevular gece 00.00’da açılıyor, dene.', a: 3.95, side: -1 },
-    { img: 'kisi-3.jpg', name: 'Zeynep T.', flag: 'almanya', city: 'Berlin', text: 'Sabah 07.00’de bakmak işe yarıyor.', a: 4.65, side: 1, best: true },
-    { img: 'kisi-1.jpg', name: 'Deniz A.', flag: 'hollanda', city: 'Amsterdam', text: 'IND’de de böyleydi, iptalleri takip et.', a: 5.35, side: -1 },
-    { img: 'kisi-5.jpg', name: 'Emre K.', flag: 'avusturya', city: 'Viyana', text: 'Takipteyim, ben de randevu bekliyorum.', a: 6.05, side: 1 },
+    { img: 'kisi-4.jpg', name: 'Can D.', flag: 'almanya', city: 'Münih', text: 'Randevular gece 00.00’da açılıyor, dene.', a: 3.3, side: -1 },
+    { img: 'kisi-3.jpg', name: 'Zeynep T.', flag: 'almanya', city: 'Berlin', text: 'Sabah 07.00’de bakmak işe yarıyor.', a: 3.82, side: 1, best: true },
+    { img: 'kisi-1.jpg', name: 'Deniz A.', flag: 'hollanda', city: 'Amsterdam', text: 'IND’de de böyleydi, iptalleri takip et.', a: 4.34, side: -1 },
+    { img: 'kisi-5.jpg', name: 'Emre K.', flag: 'avusturya', city: 'Viyana', text: 'Takipteyim, ben de randevu bekliyorum.', a: 4.86, side: 1 },
     /* soru çözüldükten sonra da sohbet sürüyor: akış yukarı kayar, yenileri gelir */
-    { img: 'kadin-1.jpg', name: 'Elif Y.', flag: 'fransa', city: 'Lyon', text: 'Lyon’da da aynı yöntem işe yaradı.', a: 10.15, side: -1 },
-    { img: 'erkek-1.jpg', name: 'Mert Ş.', flag: 'turkiye', city: 'İstanbul', text: 'Konsolosluk hattı sabah 08.00’de açılıyor.', a: 10.7, side: 1 }
+    { img: 'kadin-1.jpg', name: 'Elif Y.', flag: 'fransa', city: 'Lyon', text: 'Lyon’da da aynı yöntem işe yaradı.', a: 8.5, side: -1 },
+    { img: 'erkek-1.jpg', name: 'Mert Ş.', flag: 'turkiye', city: 'İstanbul', text: 'Konsolosluk hattı sabah 08.00’de açılıyor.', a: 9.15, side: 1 }
   ];
   const rows = REPLIES.map((r, k) => {
     const cid = `obType${k}`;
@@ -959,6 +965,10 @@ function scene2() {
   const sparkOk = sparkles([[UW - 44, 42, 1, .15], [UW - 128, 34, .85, .55], [UW - 86, 62, .7, .85]]);
   card.appendChild(sparkBest.g);
   card.appendChild(sparkOk.g);
+  /* cevaplar gelirken akışın üstünde hafif ışık: ekran hep canlı kalsın */
+  const sparkFeed = sparkles([[UL + 22, 300, .8, 0], [UL + UW - 26, 336, .75, .37],
+    [UL + 52, 420, .7, .64], [UL + UW - 62, 452, .8, .85], [UL + UW / 2, 276, .65, .21]]);
+  view.appendChild(sparkFeed.g);
   const bestRow = rows.find(r => r.best);
 
   let laid = false;
@@ -978,10 +988,10 @@ function scene2() {
        diğerleri hafifçe yukarı süzülüp söner */
     /* Akış 60px süzülüp duruyor: soru kartı ekranın ortasında (y≈204) kalıyor.
        2,3'te mavi seçim çerçevesi çakıyor, 2,95'te kart büyüyüp tepeye çıkıyor. */
-    const foc = eInOut(seg(t, 2.95, 3.75));
-    const drift = eInOut(seg(t, .9, 2.3)) * 60;
-    const pk2 = seg(t, 2.3, 2.5) * (1 - seg(t, 3.05, 3.35));
-    set(pick2, 'opacity', (pk2 * (.55 + .45 * Math.abs(Math.sin((t - 2.3) * 3.4)))).toFixed(3));
+    const foc = eInOut(seg(t, 2.35, 3.0));
+    const drift = eInOut(seg(t, .75, 1.85)) * 60;
+    const pk2 = seg(t, 1.85, 2.02) * (1 - seg(t, 2.45, 2.7));
+    set(pick2, 'opacity', (pk2 * (.55 + .45 * Math.abs(Math.sin((t - 1.85) * 4.2)))).toFixed(3));
     fills.forEach(f => {
       const u = eOut4(seg(t, f.a, f.a + .75));
       const y = SLOT(f.slot) + (1 - u) * 46 - drift - foc * 28;
@@ -990,36 +1000,37 @@ function scene2() {
       set(f.e, 'opacity', (clamp(seg(t, f.a, f.a + .32)) * (1 - seg(foc, 0, .62))).toFixed(3));
     });
 
-    const open = eInOut(seg(t, 7.35, 8.6));
+    const open = eInOut(seg(t, 6.05, 7.15));
     const L = layout(open);
     set(plate, 'height', L.h.toFixed(1));
     /* soru çözüldükten sonra akış yavaşça yukarı süzülüyor: ekran donmuyor,
        yeni cevaplar alttan girecek yeri buluyor */
     /* sonda akış yavaşça kayar: 1,5 sn'de 118px, yeni cevaplara yer açar */
-    const late = eOut(seg(t, 10.0, 11.25)) * 118;
-    const cu = eOut4(seg(t, .48, 1.2));
+    const late = eOut(seg(t, 8.35, 9.6)) * 118;
+    const cu = eOut4(seg(t, .38, 1.0));
     set(card, 'transform', tr(lerp(FX, UL, foc),
       lerp(SLOT(1) + (1 - cu) * 46 - drift, TOP, foc) - late
-        + Math.sin(t * .72) * 1.4 * seg(t, 9.9, 10.7), lerp(FS2, 1, foc)));
-    set(card, 'opacity', clamp(seg(t, .48, .8)).toFixed(3));
+        + Math.sin(t * .8) * 1.4 * seg(t, 8.3, 9.0), lerp(FS2, 1, foc)));
+    set(card, 'opacity', clamp(seg(t, .38, .68)).toFixed(3));
     /* parıltı: cevap seçilirken, kutu açılırken ve rozetlerde */
-    sparkBest.update(t, seg(t, 6.85, 7.25) * (1 - seg(t, 9.1, 9.4)));
-    sparkOk.update(t, seg(t, 9.55, 9.95));
+    sparkBest.update(t, seg(t, 5.6, 5.95) * (1 - seg(t, 7.6, 7.9)));
+    sparkOk.update(t, seg(t, 7.95, 8.3));
+    sparkFeed.update(t, seg(t, 3.4, 3.9) * (1 - seg(t, 6.0, 6.5)) + seg(t, 8.1, 8.6) * .8);
 
     set(ansRect, 'height', Math.max(.01, ANS_H * open).toFixed(2));
     set(ansBox, 'height', Math.max(.01, ANS_H * open).toFixed(2));
     set(ans, 'opacity', (open > 0 ? 1 : 0).toFixed(3));
-    set(ansHead, 'opacity', clamp(seg(t, 8.0, 8.35)).toFixed(3));
-    aLines.forEach((e, i) => set(e, 'opacity', clamp(seg(t, 8.15 + i * .16, 8.5 + i * .16)).toFixed(3)));
-    const bu = eBack(seg(t, 8.7, 9.25));
+    set(ansHead, 'opacity', clamp(seg(t, 6.6, 6.9)).toFixed(3));
+    aLines.forEach((e, i) => set(e, 'opacity', clamp(seg(t, 6.72 + i * .14, 7.05 + i * .14)).toFixed(3)));
+    const bu = eBack(seg(t, 7.2, 7.72));
     set(best, 'transform', tr(UW - PAD - 14 - 78, ANS_T + 22, clamp(bu)));
-    set(best, 'opacity', clamp(seg(t, 8.7, 8.95)).toFixed(3));
+    set(best, 'opacity', clamp(seg(t, 7.2, 7.45)).toFixed(3));
 
     set(euPill, 'transform', tr(PAD, L.pillCY));
     set(act.g, 'transform', tr(PAD, L.actCY));
-    const su = eBack(seg(t, 9.5, 10.1));
+    const su = eBack(seg(t, 7.9, 8.45));
     set(solved, 'transform', tr(UW - PAD - solvedW / 2, L.pillCY, clamp(su)));
-    set(solved, 'opacity', clamp(seg(t, 9.5, 9.75)).toFixed(3));
+    set(solved, 'opacity', clamp(seg(t, 7.9, 8.15)).toFixed(3));
 
     /* cevaplar */
     let arrived = 0, bump = 0;
@@ -1033,11 +1044,11 @@ function scene2() {
       bump = Math.max(bump, 1 - clamp(Math.abs(t - (r.a + .45)) / .2));
 
       if (r.best) {
-        const hl = seg(t, 6.85, 7.25);
+        const hl = seg(t, 5.6, 5.95);
         set(r.green, 'opacity', hl.toFixed(3));
         set(r.when, 'opacity', (1 - hl).toFixed(3));
         set(r.tick, 'opacity', hl.toFixed(3));
-        set(r.tick, 'transform', tr(0, 0, lerp(.4, 1, clamp(eBack(seg(t, 6.85, 7.3))))));
+        set(r.tick, 'transform', tr(0, 0, lerp(.4, 1, clamp(eBack(seg(t, 5.6, 6.0))))));
         /* kartın içindeki kutuya yükselir, kutu açılınca yerini ona bırakır */
         if (open > 0) {
           x = lerp(x, UL + PAD, open);
@@ -1050,14 +1061,14 @@ function scene2() {
         y = Math.max(y, TOP + L.h + 12 + j * (RH + RG));
       }
       /* yerleşen satırlar hafifçe süzülür: sohbet donmuş görünmez */
-      y += Math.sin(t * .85 + r.k * 1.1) * 1.5 * clamp(seg(t, r.a + .9, r.a + 1.5));
+      y += Math.sin(t * .95 + r.k * 1.1) * 1.5 * clamp(seg(t, r.a + .8, r.a + 1.3));
       y -= late;
       op *= 1 - seg(y, 470, 510);
       set(r.e, 'transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${(r.side * 3 * (1 - ue)).toFixed(2)}) scale(${s.toFixed(4)})`);
       set(r.e, 'opacity', op.toFixed(3));
     });
     act.coT.textContent = arrived;
-    act.upT.textContent = 4 + Math.round(10 * clamp(seg(t, 3.95, 6.6)) + 9 * clamp(seg(t, 7.2, 11.5)));
+    act.upT.textContent = 4 + Math.round(10 * clamp(seg(t, 3.3, 5.4)) + 9 * clamp(seg(t, 6.0, 10.0)));
     set(act.comment, 'transform', tr(66, 0, 1 + bump * .1));
     /* seçilen cevap her zaman en üstte çizilir */
     if (view.lastChild !== bestRow.e) view.appendChild(bestRow.e);
@@ -1081,11 +1092,11 @@ function scene3() {
   const PAGES = [
     { label: '/avrupa', icon: 'avrupa', title: 'Tüm Avrupa gündemi ve haberler', meta: '41.8K üye • 1.4K paylaşım', auto: true },
     { label: '/hollanda', icon: 'hollanda', title: 'Yaşadığın ülkenin topluluğu', meta: '12.4K üye • 118 paylaşım', auto: true },
-    { label: '/kariyer', icon: '💼', title: 'İş ilanları, CV, mülakat deneyimleri', meta: '41.8K üye • 1.4K paylaşım', pick: 1.05 },
-    { label: '/konut', icon: '🏡', title: 'Ev ve oda ilanları, kira sözleşmeleri', meta: '4.5K üye • 44 paylaşım', pick: 1.5 },
-    { label: '/eğitim', icon: '🎓', title: 'Üniversite, dil okulu ve burslar', meta: '28.1K üye • 640 paylaşım', pick: 1.95 }
+    { label: '/kariyer', icon: '💼', title: 'İş ilanları, CV, mülakat deneyimleri', meta: '41.8K üye • 1.4K paylaşım', pick: .85 },
+    { label: '/konut', icon: '🏡', title: 'Ev ve oda ilanları, kira sözleşmeleri', meta: '4.5K üye • 44 paylaşım', pick: 1.2 },
+    { label: '/eğitim', icon: '🎓', title: 'Üniversite, dil okulu ve burslar', meta: '28.1K üye • 640 paylaşım', pick: 1.55 }
   ];
-  const EXTRA = [{ label: '/schengen vizesi', icon: '✈️', a: 3.35 }, { label: '/sağlık', icon: '🏥', a: 3.5 }];
+  const EXTRA = [{ label: '/schengen vizesi', icon: '✈️', a: 2.7 }, { label: '/sağlık', icon: '🏥', a: 2.85 }];
 
   const cards = PAGES.map((p, k) => {
     const y = TOP + k * (CH + CG);
@@ -1140,9 +1151,9 @@ function scene3() {
 
   /* --- dokunulan konunun haberi --- */
   const NEWS = [
-    { ti: 0, img: 'fransa.jpg', lines: ['AB dijital vize sistemi için', 'tarihi açıkladı'], meta: 'Avrupa Komisyonu • 2 sa', tap: 4.45 },
-    { ti: 2, img: 'almanya.jpg', lines: ['Randevu kotaları üç ülkede', 'birden artırıldı'], meta: '/schengen vizesi • 5 sa', tap: 6.85 },
-    { ti: 4, img: 'hollanda.jpg', lines: ['Amsterdam’da kira tavanı', 'genişletiliyor'], meta: '/konut • 12 sa', tap: 9.25 }
+    { ti: 0, img: 'fransa.jpg', lines: ['AB dijital vize sistemi için', 'tarihi açıkladı'], meta: 'Avrupa Komisyonu • 2 sa', tap: 3.62 },
+    { ti: 2, img: 'almanya.jpg', lines: ['Randevu kotaları üç ülkede', 'birden artırıldı'], meta: '/schengen vizesi • 5 sa', tap: 5.82 },
+    { ti: 4, img: 'hollanda.jpg', lines: ['Amsterdam’da kira tavanı', 'genişletiliyor'], meta: '/konut • 12 sa', tap: 8.02 }
   ];
   const NH3 = 112, NY = 396;
   const news = NEWS.map(n => {
@@ -1157,23 +1168,25 @@ function scene3() {
     return Object.assign({ e }, n);
   });
   const sparkNews = sparkles([[UL + 18, NY - 10, 1, 0], [UL + UW - 24, NY - 6, .9, .34],
-    [UL + UW - 60, NY + NH3 + 6, .8, .68], [UL + 70, NY + NH3 + 10, .75, .12]]);
+    [UL + UW - 60, NY + NH3 + 6, .8, .68], [UL + 70, NY + NH3 + 10, .75, .12],
+    [UL + UW - 14, NY + NH3 / 2, .7, .52], [UL + 6, NY + NH3 / 2, .7, .88]]);
   view.appendChild(sparkNews.g);
   const sparkSph = sparkles([[SX - 128, SY - 58, 1, .1], [SX + 130, SY - 32, .85, .44],
-    [SX - 92, SY + 76, .8, .7], [SX + 100, SY + 68, .9, .9], [SX + 6, SY - 104, .75, .26]]);
+    [SX - 92, SY + 76, .8, .7], [SX + 100, SY + 68, .9, .9], [SX + 6, SY - 104, .75, .26],
+    [SX - 138, SY + 30, .7, .62], [SX + 140, SY + 46, .75, .08], [SX - 20, SY + 110, .65, .5]]);
   view.appendChild(sparkSph.g);
 
   /* küre dönüşü: her konuyu öne getirip durur */
   const ROT0 = 96, STOP = [0, -LON * 2, -LON * 4];
-  const TURN = [[3.5, 4.3], [5.95, 6.7], [8.35, 9.1]];
+  const TURN = [[2.85, 3.5], [5.05, 5.7], [7.25, 7.9]];
 
   return { g, update(t) {
     g.setAttribute('opacity', envelope(t).toFixed(3));
 
-    const gather = eInOut(seg(t, 2.5, 3.5));       /* kartlar hapa dönüşür */
+    const gather = eInOut(seg(t, 2.0, 2.85));      /* kartlar hapa dönüşür */
     cards.forEach((c, k) => {
-      const a = .08 + k * .1;
-      const inU = eOut4(seg(t, a, a + .6));
+      const a = .06 + k * .08;
+      const inU = eOut4(seg(t, a, a + .5));
       if (c.pick) {
         const sl = seg(t, c.pick, c.pick + .22);
         set(c.sel, 'opacity', sl.toFixed(3));
@@ -1190,12 +1203,12 @@ function scene3() {
       c.px = UL + 14; c.py = y + 24;
       c.born = clamp(seg(t, a, a + .3));
     });
-    set(chosen, 'opacity', (clamp(seg(t, 3.15, 3.55)) * (1 - seg(t, 4.05, 4.4))).toFixed(3));
+    set(chosen, 'opacity', (clamp(seg(t, 2.55, 2.9)) * (1 - seg(t, 3.3, 3.6))).toFixed(3));
 
     /* dönüş açısı: duraklarda hafif salınım, ekran hiç donmuyor */
     let rot = ROT0;
     TURN.forEach((w, i) => { if (t >= w[0]) rot = lerp(i ? STOP[i - 1] : ROT0, STOP[i], eInOut(seg(t, w[0], w[1]))); });
-    rot += Math.sin(t * 1.15) * 3.4 - Math.max(0, t - 9.6) * 2.6;   /* sonda yavaşça dönmeyi sürdürür */
+    rot += Math.sin(t * 1.3) * 3.4 - Math.max(0, t - 8.35) * 2.8;   /* sonda yavaşça dönmeyi sürdürür */
     set(halo, 'opacity', (gather * .3).toFixed(3));
     set(halo, 'transform', tr(0, Math.sin(t * .9) * 2.2));
 
@@ -1309,12 +1322,23 @@ function scene4() {
      Kart küçülüp tepeye çekilir, altında şehirler tek tek uyanır: pin, halka,
      Berlin'den uzanan kavis ve o şehirdeki kişi. Sonra kişiler izleyici sırasına
      akar, kart büyür ve istatistikler gelir. */
-  const MY = 372;
-  const MAP = { almanya: [CX + 12, MY - 52], hollanda: [CX - 86, MY - 74], fransa: [CX - 124, MY + 26],
-    avusturya: [CX + 92, MY + 14], belcika: [CX - 98, MY - 26], isvec: [CX + 48, MY - 122], italya: [CX - 4, MY + 96] };
+  /* Avrupa haritası: 01'in kullandığı kara verisinin Mercator izdüşümü. Pinler
+     de aynı izdüşümden geçiyor, yani kişiler gerçekten kendi ülkelerinde. */
+  const MY = 366;
+  const m4 = d3.geoMercator().center([12, 50]).scale(520).translate([CX, MY]);
+  const CITY = { almanya: [13.4, 52.52], hollanda: [4.89, 52.37], fransa: [2.35, 48.86],
+    avusturya: [16.37, 48.21], belcika: [4.35, 50.85], isvec: [18.07, 59.33], italya: [12.5, 41.9] };
+  const MAP = {};
+  Object.entries(CITY).forEach(([k, ll]) => { const q = m4(ll); MAP[k] = [q[0], q[1]]; });
   const ORG = MAP.almanya;
   const mapG = G([], { opacity: 0 });
   view.appendChild(mapG);
+  const land4 = S('path', { class: 'globe-land' });
+  const path4 = d3.geoPath(m4);
+  g.querySelector('defs').appendChild(
+    S('clipPath', { id: 'obMap4' }, S('rect', { x: 14, y: 202, width: 365, height: 322, rx: 26 })));
+  mapG.appendChild(G([land4], { 'clip-path': 'url(#obMap4)' }));
+  let land4Set = false;
   const pins = {};
   Object.entries(MAP).forEach(([f, [x, y]]) => {
     let arc = null;
@@ -1333,7 +1357,8 @@ function scene4() {
     pins[f] = { arc, ring, dot };
   });
   const sparkMap = sparkles([[CX - 66, MY - 112, 1, 0], [CX + 74, MY - 66, .85, .3], [CX - 24, MY + 44, .8, .6],
-    [CX + 34, MY + 88, .9, .85], [CX - 112, MY - 6, .75, .45], [CX + 104, MY - 104, .8, .15]]);
+    [CX + 34, MY + 88, .9, .85], [CX - 112, MY - 6, .75, .45], [CX + 104, MY - 104, .8, .15],
+    [CX - 148, MY + 70, .7, .72], [CX + 150, MY + 24, .7, .38], [CX + 2, MY + 132, .65, .05]]);
   mapG.appendChild(sparkMap.g);
 
   /* --- izleyici sırası: farklı ülkelerden kişiler --- */
@@ -1343,7 +1368,7 @@ function scene4() {
   const aud = AUD.map((p, i) => {
     const e = G([face(p[0], 14), G([flagDot(p[1], 5.2)], { transform: tr(10, 10) })], { opacity: 0 });
     view.appendChild(e);
-    return { e, x: UL + 14 + i * 21, flag: p[1], a: 1.95 + i * .34 };
+    return { e, x: UL + 14 + i * 21, flag: p[1], a: 1.5 + i * .2 };
   });
   const TX = UL + 14 + 6 * 21 + 28;
   const reach = txt('0 kişi gördü', { class: 'ui-name', x: TX, y: AY - 1, 'font-size': 14.5, opacity: 0 });
@@ -1366,10 +1391,10 @@ function scene4() {
      Profil görüntüleme, öne çıkma ve tanıtımdan mesajlaşma yok: öyle bir
      özellik bulunmuyor. */
   const NOTES4 = [
-    { icon: 'mega', title: 'Tanıtımın yayına alındı', sub: '/almanya ve /avrupa sayfalarında', when: 'şimdi', a: 6.95 },
-    { icon: 'eye', title: 'Tanıtımın 5.000 kez görüntülendi', sub: 'Son bir saatte', when: '1 dk', a: 8.1 },
-    { icon: 'link', title: '“Ziyaret et” 320 kez tıklandı', sub: 'Tanıtım kartından siteye', when: '2 dk', a: 9.4 },
-    { icon: 'avrupa', title: 'Tanıtımın 7 ülkeden görüntülendi', sub: 'Almanya, Hollanda, Fransa…', when: '5 dk', a: 10.7 }
+    { icon: 'mega', title: 'Tanıtımın yayına alındı', sub: '/almanya ve /avrupa sayfalarında', when: 'şimdi', a: 5.7 },
+    { icon: 'eye', title: 'Tanıtımın 5.000 kez görüntülendi', sub: 'Son bir saatte', when: '1 dk', a: 6.7 },
+    { icon: 'link', title: '“Ziyaret et” 320 kez tıklandı', sub: 'Tanıtım kartından siteye', when: '2 dk', a: 7.7 },
+    { icon: 'avrupa', title: 'Tanıtımın 7 ülkeden görüntülendi', sub: 'Almanya, Hollanda, Fransa…', when: '5 dk', a: 8.7 }
   ];
   const notes = NOTES4.map(n => {
     let ic;
@@ -1394,12 +1419,13 @@ function scene4() {
 
     const cu = eOut4(seg(t, 0, .9));
     /* paylaşılma anı: kart .62'ye küçülüp tepeye çekilir, 6,5'te geri büyür */
-    const eur = eInOut(seg(t, 1.5, 2.25)) * (1 - eInOut(seg(t, 5.7, 6.5)));
+    if (!land4Set && LAND) { set(land4, 'd', path4(LAND)); land4Set = true; }
+    const eur = eInOut(seg(t, 1.1, 1.75)) * (1 - eInOut(seg(t, 4.5, 5.2)));
     const sc4 = lerp(.95, 1, cu) * lerp(1, .62, eur);
     set(card, 'transform', tr(UL + UW * (1 - sc4) / 2, lerp(TOP + (1 - cu) * 28, 64, eur), sc4));
     set(card, 'opacity', clamp(seg(t, 0, .35)).toFixed(3));
     set(mapG, 'opacity', eur.toFixed(3));
-    sparkMap.update(t, seg(t, 2.3, 2.9));
+    sparkMap.update(t, seg(t, 1.8, 2.3));
     /* görsel yavaşça yakınlaşmadan oturur */
     const k = lerp(1.1, 1, eOut(seg(t, 0, 3)));
     set(img, 'transform', `translate(${CX - UL} 174) scale(${k.toFixed(4)}) translate(${UL - CX} -174)`);
@@ -1423,11 +1449,11 @@ function scene4() {
       set(w, 'ry', (110 + e * 170).toFixed(1));
       set(w, 'opacity', ((1 - u) * .35 * wEnd).toFixed(3));
     });
-    spark.update(t, seg(t, 6.7, 7.3));
+    spark.update(t, seg(t, 5.5, 6.0));
 
     aud.forEach((p, i) => {
       const u = clamp(eBack(seg(t, p.a, p.a + .45)));
-      const fly = eInOut(seg(t, 5.75 + i * .05, 6.5 + i * .05));
+      const fly = eInOut(seg(t, 4.55 + i * .04, 5.2 + i * .04));
       const [mx, my] = MAP[p.flag];
       const pin = pins[p.flag];
       /* şehir uyanır: kavis uzanır, halka açılır, kişi çıkar */
@@ -1443,10 +1469,10 @@ function scene4() {
       set(p.e, 'transform', tr(lerp(mx, p.x, fly), lerp(my, AY, fly) + (1 - u) * 8, u * lerp(1.34, 1, fly)));
       set(p.e, 'opacity', clamp(seg(t, p.a, p.a + .18)).toFixed(3));
     });
-    const n = Math.round(eOut(seg(t, 6.4, 11.7)) * 1248) * 10 + Math.floor(Math.max(0, t - 11.7) * 5) * 10;
+    const n = Math.round(eOut(seg(t, 5.2, 9.7)) * 1248) * 10 + Math.floor(Math.max(0, t - 9.7) * 5) * 10;
     reach.textContent = n.toLocaleString('tr-TR') + ' kişi gördü';
-    set(reach, 'opacity', clamp(seg(t, 6.45, 6.8)).toFixed(3));
-    set(reachSub, 'opacity', clamp(seg(t, 6.6, 6.95)).toFixed(3));
+    set(reach, 'opacity', clamp(seg(t, 5.25, 5.55)).toFixed(3));
+    set(reachSub, 'opacity', clamp(seg(t, 5.4, 5.7)).toFixed(3));
 
     /* yeni bildirim en üste girer, eskileri aşağı iter */
     notes.forEach((m, i) => {
@@ -1466,25 +1492,25 @@ const COPY = [
     head: 'Avrupa’nın her yerinde<br>bir tanıdığın var',
     sub: 'Avrupa’da yaşayanlar ve gitmeyi planlayanlar<br>için tek topluluk.',
     cta: 'Devam et',
-    rows: [['Küre kadraja yükselir', 0, 1.55], ['Uçak kürenin çevresinde', .65, 4.0], ['Küre döner, Avrupa’da durur', 0, 5.3], ['Dalış ve Avrupa yakın planı', 4.0, 5.45], ['Uçak rotada', 5.45, 9.4], ['Kişiler ve rozetler', 5.5, 10.0], ['Topluluk ağı', 6.0, 10.3], ['Uçak kıvrılıp hızla uzaklaşır', 9.4, 11.1]]
+    rows: [['Küre kadraja yükselir', 0, 1.2], ['Uçak kürenin çevresinde', .5, 3.1], ['Küre döner, Avrupa’da durur', 0, 4.2], ['Dalış ve Avrupa yakın planı', 3.1, 4.3], ['Uçak rotada', 4.3, 7.85], ['Kişiler ve rozetler', 4.35, 8.4], ['Topluluk ağı', 4.8, 8.7], ['Uçak kıvrılıp hızla uzaklaşır', 7.85, 9.4]]
   },
   {
     head: 'Sor, paylaş,<br>tavsiye al',
     sub: 'Vize, oturum, eğitim, ev, iş, seyahat, sağlık…<br>Deneyimini paylaş, tavsiye ver, tavsiye iste.',
     cta: 'Devam et',
-    rows: [['Gönderiler akışa girer', .15, 1.9], ['Soru seçilir (mavi çerçeve)', 2.3, 2.95], ['Soru büyüyüp öne çıkar', 2.95, 3.75], ['Şehirlerden cevaplar', 3.95, 6.6], ['En iyi cevap seçilir', 6.85, 7.3], ['Cevap karta çıkar', 7.35, 8.6], ['En iyi cevap rozeti', 8.7, 9.25], ['Soru çözüldü', 9.5, 10.1], ['Sohbet sürüyor', 10.0, 11.5]]
+    rows: [['Gönderiler akışa girer', .12, 1.5], ['Soru seçilir (mavi çerçeve)', 1.85, 2.35], ['Soru büyüyüp öne çıkar', 2.35, 3.0], ['Şehirlerden cevaplar', 3.3, 5.4], ['En iyi cevap seçilir', 5.6, 6.0], ['Cevap karta çıkar', 6.05, 7.15], ['En iyi cevap rozeti', 7.2, 7.72], ['Soru çözüldü', 7.9, 8.45], ['Sohbet sürüyor', 8.35, 10.0]]
   },
   {
     head: 'Gündemi takip et,<br>hiçbir şeyi kaçırma',
     sub: 'Eğitim, vize, seyahat, haber…<br>Sayfaları takip et, akışını kendine göre kur.',
     cta: 'Devam et',
-    rows: [['Sayfa kartları', .1, 1.3], ['Konumdan otomatik seçim', .1, 1.3], ['Kullanıcı seçer', 1.75, 2.9], ['Konular küreye dizilir', 3.5, 4.75], ['Küre döner, konu öne gelir', 4.55, 5.4], ['Dokunuş ve haber', 5.6, 7.4], ['İkinci konu', 6.9, 9.9], ['Üçüncü konu', 9.2, 12.5]]
+    rows: [['Sayfa kartları', .06, 1.0], ['Konumdan otomatik seçim', .06, 1.0], ['Kullanıcı seçer', .85, 1.9], ['Konular küreye dizilir', 2.0, 2.85], ['Küre döner, konu öne gelir', 2.85, 3.5], ['Dokunuş ve haber', 3.62, 5.6], ['İkinci konu', 5.05, 7.8], ['Üçüncü konu', 7.25, 10.0]]
   },
   {
     head: 'İşletmeni binlerce kişiye<br>kolayca ulaştır',
     sub: 'Hizmetini Avrupa’daki ve Türkiye’deki<br>müşterilerine tek yerden duyur.',
     cta: 'Hemen başla',
-    rows: [['Tanıtım kartı', 0, .9], ['Yayında', 1.1, 1.35], ['Kart küçülür, Avrupa açılır', 1.5, 2.25], ['Şehirler uyanır', 1.95, 4.5], ['Kişiler izleyici sırasına akar', 5.75, 6.85], ['Erişim dalgaları', 1.2, 11.3], ['Erişim sayacı', 6.4, 11.7], ['Bildirimler', 6.95, 11.2]]
+    rows: [['Tanıtım kartı', 0, .9], ['Yayında', 1.0, 1.25], ['Kart küçülür, Avrupa haritası', 1.1, 1.75], ['Şehirler uyanır', 1.5, 3.2], ['Kişiler izleyici sırasına akar', 4.55, 5.25], ['Erişim dalgaları', 1.0, 10.0], ['Erişim sayacı', 5.2, 9.7], ['Bildirimler', 5.7, 9.3]]
   }
 ];
 const NOTES = {
