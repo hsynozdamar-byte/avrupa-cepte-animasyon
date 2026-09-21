@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avrupa Cepte · Geliştirici paketi</title>
+<meta name="description" content="Avrupa Cepte animasyonlarının kaynak dosyaları, varlıkları ve kurulum notları. Her şey tek tek veya ZIP olarak indirilebilir.">
+<link rel="icon" href="../assets/icon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../system.css">
+<style>
+  .hub { max-width: 1100px; margin: 0 auto; padding-inline: 24px; padding-block: 52px 96px; }
+  .hub header { max-width: 62ch; margin-bottom: 64px; }
+
+  /* panodaki iki sütunlu ritmin aynısı */
+  .flow {
+    display: grid;
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+    gap: 16px 56px;
+    align-items: start;
+    padding-block: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .flow-head h3 { margin: 0 0 8px; font-size: 26px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+  .flow-head .num {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 12px; color: var(--accent); display: block; margin-bottom: 10px;
+  }
+  .flow-head p { margin: 0; color: var(--muted); font-size: 14px; max-width: 42ch; }
+  .flow-head .meta {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 11px; color: var(--muted); display: block; margin-top: 14px;
+  }
+  @media (max-width: 860px) { .flow { grid-template-columns: 1fr; gap: 18px; } }
+
+  .packs { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+  .pack {
+    border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px;
+    background: var(--surface); display: flex; flex-direction: column; gap: 3px; text-align: left;
+    font: inherit; color: inherit; cursor: pointer; transition: border-color .15s;
+  }
+  .pack:hover { border-color: var(--accent); }
+  .pack:disabled { opacity: .6; cursor: progress; }
+  .pack b { font-size: 14.5px; font-weight: 600; }
+  .pack span { font-size: 12px; color: var(--muted); }
+  .pack .st { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 10.5px; color: var(--accent); min-height: 13px; }
+
+  pre {
+    margin: 0 0 12px; padding: 14px 16px; border-radius: 14px; overflow-x: auto;
+    background: var(--surface); border: 1px solid var(--line);
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 12.5px; line-height: 1.7; color: var(--ink);
+  }
+  pre:last-child { margin-bottom: 0; }
+  pre b { color: var(--accent); font-weight: 500; }
+  .sub { margin: 0; color: var(--muted); font-size: 13px; }
+
+  .tokens { display: grid; grid-template-columns: repeat(auto-fit, minmax(146px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .tokens li { border: 1px solid var(--line); border-radius: 12px; padding: 9px 11px; display: flex; align-items: center; gap: 9px; }
+  .tokens i { width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--line); display: block; flex: none; }
+  .tokens code { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 11px; color: var(--muted); display: block; }
+  .tokens strong { font-size: 12.5px; font-weight: 600; display: block; }
+
+  details {
+    border: 1px solid var(--line); border-radius: 14px; margin-bottom: 8px; background: var(--surface); overflow: hidden;
+  }
+  details[open] { border-color: var(--accent); }
+  summary {
+    cursor: pointer; padding: 12px 16px; font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 10px; list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; margin-left: auto; color: var(--muted); font-weight: 500; }
+  details[open] summary::after { content: '−'; }
+  summary .cnt {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 11px; color: var(--muted); font-weight: 400;
+  }
+  .files { margin: 0; padding: 0 16px 10px; list-style: none; }
+  .files li { border-top: 1px solid var(--line); }
+  .files a { display: flex; align-items: center; gap: 10px; padding: 7px 0; text-decoration: none; color: inherit; font-size: 13px; }
+  .files a:hover { color: var(--accent); }
+  .files .ext {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 10px;
+    text-transform: uppercase; color: var(--muted); border: 1px solid var(--line);
+    border-radius: 6px; padding: 1px 5px; flex: none; min-width: 42px; text-align: center;
+  }
+  .files .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .files .sz { margin-left: auto; padding-left: 12px; font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 11px; color: var(--muted); flex: none; }
+  .note { color: var(--muted); font-size: 13px; margin: 28px 0 0; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="tn-brand" href="/">
+    <img class="tn-mark" src="/assets/icon.jpg" alt="">
+    <span>Avrupa Cepte</span>
+    <span class="tn-sep">/</span>
+    <span class="tn-here">Geliştirici</span>
+  </a>
+  <div class="tn-links">
+    <a href="/">Pano</a>
+    <a href="/splash/">Açılış</a>
+    <a href="/onboarding/">Onboarding</a>
+    <a href="/tanitim/">Tanıtım</a>
+    <a href="/gelistirici/" aria-current="page">Geliştirici</a>
+  </div>
+</nav>
+
+<main class="hub">
+  <header>
+    <p class="eyebrow">Avrupa Cepte · geliştirici paketi</p>
+    <h1>Kurulum ve indirme</h1>
+    <p class="lead">Buradaki her şey <strong>canlı HTML</strong>: video, derleme adımı ve bağımlılık yok. Kaynak dosyaları ve varlıkları tek tek ya da ZIP olarak indir, kendi projene kopyala, çalıştır.</p>
+  </header>
+
+  <article class="flow" id="indir">
+    <div class="flow-head">
+      <span class="num">01</span>
+      <h3>Paketleri indir</h3>
+      <p>ZIP dosyaları tarayıcıda, bu sitedeki dosyalardan derlenir; indirdiğin şey her zaman yayındaki sürümün aynısıdır.</p>
+      <span class="meta" id="packMeta"></span>
+    </div>
+    <div class="packs" id="packs"></div>
+  </article>
+
+  <article class="flow">
+    <div class="flow-head">
+      <span class="num">02</span>
+      <h3>Çalıştır</h3>
+      <p>Derleme yok, paket yöneticisi yok. Klasörü herhangi bir statik sunucudan yayınla, biter.</p>
+    </div>
+    <div>
+<pre><b>#</b> indirdiğin klasörün içinde
+python3 -m http.server 4174
+<b>#</b> sonra: http://127.0.0.1:4174/onboarding/</pre>
+      <p class="sub">Vercel'e almak için de ek ayar gerekmez; kökteki <code>vercel.json</code> yalnızca <code>trailingSlash</code> taşır. Tek dış bağımlılık, tanıtım ve onboarding sayfalarının kullandığı <code>tanitim/assets/d3.min.js</code>'tir ve o da pakete dahildir.</p>
+    </div>
+  </article>
+
+  <article class="flow">
+    <div class="flow-head">
+      <span class="num">03</span>
+      <h3>Gömme ve derin bağlantılar</h3>
+      <p>Her akış 393 × 852 çerçevede çalışır ve kendi içinde ölçeklenir. Tek bir ekranı açmak için adresin sonuna karma ekle.</p>
+    </div>
+    <div>
+<pre>&lt;iframe src="https://<b>alan-adin</b>/onboarding/#s=3"
+        width="393" height="852" style="border:0"&gt;&lt;/iframe&gt;</pre>
+<pre><b>/onboarding/</b>        dört ekran sırayla · 40 sn
+<b>/onboarding/#s=1</b>    tek ekran · 10 sn
+<b>/tanitim/#s=2</b>       tanıtım akışı, ikinci sahne
+<b>/splash/#m=ac</b>       yalnızca Avrupa Cepte açılışı</pre>
+    </div>
+  </article>
+
+  <article class="flow">
+    <div class="flow-head">
+      <span class="num">04</span>
+      <h3>Tasarım değerleri</h3>
+      <p>Tümü <code>system.css</code> içinde CSS değişkeni; koyu tema aynı adları yeniden tanımlar. Yazı tipleri Figtree (arayüz) ve IBM Plex Mono (sayısal alanlar).</p>
+      <span class="meta">393 × 852 · kart genişliği 345 · köşe 24</span>
+    </div>
+    <ul class="tokens" id="tokens"></ul>
+  </article>
+
+  <article class="flow">
+    <div class="flow-head">
+      <span class="num">05</span>
+      <h3>Dosyalar</h3>
+      <p id="fileInfo">Liste yükleniyor…</p>
+      <span class="meta">tek tek indirmek için satıra tıkla</span>
+    </div>
+    <div id="files"></div>
+  </article>
+
+  <p class="note">Liste <code>dosyalar.json</code>'dan okunur; o da depo kökünde <code>node tools/manifest.mjs</code> ile üretilir. Yeni dosya eklendiğinde komutu bir kez çalıştırmak yeterli.</p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const mb = b => (b / 1048576).toFixed(b < 1048576 ? 2 : 1) + ' MB';
+const kb = b => b < 1024 ? b + ' B' : b < 1048576 ? (b / 1024).toFixed(0) + ' KB' : mb(b);
+
+const PACKS = [
+  { ad: 'Tüm proje', not: 'Dört akış, varlıklar ve tasarım sistemi', dosya: 'avrupa-cepte-animasyon.zip', filtre: () => true },
+  { ad: 'Onboarding akışı', not: 'Sayfa, kod ve paylaşılan varlıklar', dosya: 'onboarding.zip', filtre: p => p.startsWith('onboarding/') || p.startsWith('assets/') || p === 'system.css' },
+  { ad: 'Açılış akışı', not: 'Sayfa, kod ve paylaşılan varlıklar', dosya: 'acilis.zip', filtre: p => p.startsWith('splash/') || p.startsWith('assets/') || p === 'system.css' },
+  { ad: 'Tanıtım akışı', not: 'Sayfa, kod ve kendi varlıkları', dosya: 'tanitim.zip', filtre: p => p.startsWith('tanitim/') || p === 'system.css' },
+  { ad: 'Yalnızca görseller', not: 'Fotoğraf, bayrak, ikon ve SVG', dosya: 'gorseller.zip', filtre: p => /\.(png|jpe?g|svg|webp|woff2?)$/i.test(p) }
+];
+
+let MAN = null;
+
+fetch('../dosyalar.json').then(r => r.json()).then(m => {
+  MAN = m;
+  kur();
+}).catch(() => {
+  $('#fileInfo').textContent = 'Dosya listesi okunamadı. dosyalar.json yayında mı?';
+  $('#packs').innerHTML = '<p style="color:var(--muted);font-size:13px">Paket listesi okunamadı.</p>';
+});
+
+function kur() {
+  /* paket düğmeleri */
+  $('#packs').innerHTML = '';
+  PACKS.forEach((p, i) => {
+    const say = MAN.dosyalar.filter(f => p.filtre(f.path));
+    const boyut = say.reduce((a, f) => a + f.size, 0);
+    const b = document.createElement('button');
+    b.className = 'pack';
+    b.innerHTML = `<b>${p.ad}</b><span>${p.not}</span><span>${say.length} dosya · ${mb(boyut)}</span><span class="st"></span>`;
+    b.onclick = () => indir(p, b);
+    $('#packs').append(b);
+  });
+
+  /* dosya listesi */
+  const gruplar = [...new Set(MAN.dosyalar.map(f => f.group))];
+  $('#fileInfo').textContent = `${MAN.adet} dosya, toplam ${mb(MAN.toplamBayt)}. Gruplar kapalı gelir, açınca tek tek indirebilirsin.`;
+  $('#files').innerHTML = gruplar.map(g => {
+    const list = MAN.dosyalar.filter(f => f.group === g);
+    const boyut = list.reduce((a, f) => a + f.size, 0);
+    return `<details><summary>${g} <span class="cnt">${list.length} dosya · ${mb(boyut)}</span></summary><ul class="files">` + list.map(f =>
+      `<li><a href="../${f.path}" download><span class="ext">${f.ext || 'dosya'}</span><span class="nm">${f.path}</span><span class="sz">${kb(f.size)}</span></a></li>`
+    ).join('') + '</ul></details>';
+  }).join('');
+  $('#packMeta').textContent = `${MAN.adet} dosya · ${mb(MAN.toplamBayt)} · ${MAN.olusturuldu}`;
+
+  /* tasarım değerleri: system.css'ten oku */
+  fetch('../system.css').then(r => r.text()).then(css => {
+    const blok = css.slice(css.indexOf(':root {'), css.indexOf('}', css.indexOf(':root {')));
+    const renkler = [...blok.matchAll(/--([\w-]+):\s*(#[0-9a-fA-F]{3,8})/g)].map(m => [m[1], m[2]]);
+    $('#tokens').innerHTML = renkler.map(([ad, renk]) =>
+      `<li><i style="background:${renk}"></i><span><strong>--${ad}</strong><code>${renk}</code></span></li>`).join('');
+  });
+}
+
+async function indir(p, btn) {
+  const st = btn.querySelector('.st');
+  const list = MAN.dosyalar.filter(f => p.filtre(f.path));
+  btn.disabled = true;
+  try {
+    const zip = new JSZip();
+    for (let i = 0; i < list.length; i++) {
+      st.textContent = `${i + 1}/${list.length} indiriliyor…`;
+      const r = await fetch('../' + list[i].path);
+      if (!r.ok) throw new Error(list[i].path);
+      zip.file(list[i].path, await r.blob());
+    }
+    st.textContent = 'paketleniyor…';
+    const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } },
+      meta => { st.textContent = 'paketleniyor… %' + meta.percent.toFixed(0); });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = p.dosya; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    st.textContent = 'indirildi · ' + mb(blob.size);
+  } catch (e) {
+    st.textContent = 'hata: ' + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

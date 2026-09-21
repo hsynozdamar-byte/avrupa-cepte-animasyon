@@ -1,0 +1,751 @@
+{
+  "olusturuldu": "2026-09-21",
+  "adet": 124,
+  "toplamBayt": 19796397,
+  "dosyalar": [
+    {
+      "path": ".gitignore",
+      "size": 24,
+      "ext": "",
+      "group": "Kök"
+    },
+    {
+      "path": "assets/europe-dots.png",
+      "size": 85738,
+      "ext": "png",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/almanya.svg",
+      "size": 322,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/avrupa.svg",
+      "size": 2059,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/avusturya.svg",
+      "size": 333,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/belcika.svg",
+      "size": 333,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/danimarka.svg",
+      "size": 307,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/fransa.svg",
+      "size": 333,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/hollanda.svg",
+      "size": 322,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/ingiltere.svg",
+      "size": 315,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/ispanya.svg",
+      "size": 263,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/isvec.svg",
+      "size": 315,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/italya.svg",
+      "size": 333,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/polonya.svg",
+      "size": 277,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/flags/turkiye.svg",
+      "size": 455,
+      "ext": "svg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/icon.jpg",
+      "size": 44055,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/people/erkek-1.jpg",
+      "size": 17306,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/people/kadin-1.jpg",
+      "size": 19019,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/people/kisi-1.jpg",
+      "size": 31715,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/people/kisi-2.jpg",
+      "size": 34752,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/people/kisi-3.jpg",
+      "size": 31029,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/people/kisi-4.jpg",
+      "size": 28037,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/people/kisi-5.jpg",
+      "size": 30596,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/places/almanya.jpg",
+      "size": 26430,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/places/alpler.jpg",
+      "size": 30968,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/places/fransa.jpg",
+      "size": 23751,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/places/hollanda.jpg",
+      "size": 31848,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/places/ispanya.jpg",
+      "size": 29606,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/places/italya.jpg",
+      "size": 30784,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/places/kampus.jpg",
+      "size": 32835,
+      "ext": "jpg",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/status-dark.png",
+      "size": 4281,
+      "ext": "png",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/status.png",
+      "size": 5509,
+      "ext": "png",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "assets/wordmark.png",
+      "size": 16890,
+      "ext": "png",
+      "group": "Paylaşılan varlıklar"
+    },
+    {
+      "path": "gelistirici/index.html",
+      "size": 12984,
+      "ext": "html",
+      "group": "Kök"
+    },
+    {
+      "path": "index.html",
+      "size": 8109,
+      "ext": "html",
+      "group": "Kök"
+    },
+    {
+      "path": "onboarding/app.js",
+      "size": 91401,
+      "ext": "js",
+      "group": "Onboarding akışı"
+    },
+    {
+      "path": "onboarding/index.html",
+      "size": 12051,
+      "ext": "html",
+      "group": "Onboarding akışı"
+    },
+    {
+      "path": "README.md",
+      "size": 2868,
+      "ext": "md",
+      "group": "Kök"
+    },
+    {
+      "path": "splash/assets/home.jpg",
+      "size": 161215,
+      "ext": "jpg",
+      "group": "Açılış akışı"
+    },
+    {
+      "path": "splash/assets/icon.jpg",
+      "size": 44055,
+      "ext": "jpg",
+      "group": "Açılış akışı"
+    },
+    {
+      "path": "splash/assets/plane.png",
+      "size": 113725,
+      "ext": "png",
+      "group": "Açılış akışı"
+    },
+    {
+      "path": "splash/assets/status-dark.png",
+      "size": 4281,
+      "ext": "png",
+      "group": "Açılış akışı"
+    },
+    {
+      "path": "splash/assets/status-light.png",
+      "size": 4589,
+      "ext": "png",
+      "group": "Açılış akışı"
+    },
+    {
+      "path": "splash/assets/status.png",
+      "size": 5509,
+      "ext": "png",
+      "group": "Açılış akışı"
+    },
+    {
+      "path": "splash/assets/wordmark.png",
+      "size": 16890,
+      "ext": "png",
+      "group": "Açılış akışı"
+    },
+    {
+      "path": "splash/index.html",
+      "size": 51573,
+      "ext": "html",
+      "group": "Açılış akışı"
+    },
+    {
+      "path": "system.css",
+      "size": 11665,
+      "ext": "css",
+      "group": "Kök"
+    },
+    {
+      "path": "tanitim/app-v0.js",
+      "size": 30839,
+      "ext": "js",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/app-v1.js",
+      "size": 47877,
+      "ext": "js",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/app.js",
+      "size": 33518,
+      "ext": "js",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets-manifest.json",
+      "size": 5968,
+      "ext": "json",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/alps_mountains.jpg",
+      "size": 1045599,
+      "ext": "jpg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/D3-LICENSE.txt",
+      "size": 731,
+      "ext": "txt",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/d3.min.js",
+      "size": 279706,
+      "ext": "js",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/erasmus_university.jpg",
+      "size": 1104753,
+      "ext": "jpg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/eye.png",
+      "size": 1183,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/flag-germany.svg",
+      "size": 322,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/flag-netherlands.svg",
+      "size": 322,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/font.css",
+      "size": 527,
+      "ext": "css",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/france_landmark.jpg",
+      "size": 866636,
+      "ext": "jpg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/germany_landmark.jpg",
+      "size": 930829,
+      "ext": "jpg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/italy_landmark.jpg",
+      "size": 978362,
+      "ext": "jpg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/land.geojson",
+      "size": 138160,
+      "ext": "geojson",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/netherlands_windmill.jpg",
+      "size": 1050345,
+      "ext": "jpg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/people.png",
+      "size": 1426,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgCap.svg",
+      "size": 340,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgCellularConnection.svg",
+      "size": 1171,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage.svg",
+      "size": 400,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage1.png",
+      "size": 19313,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage158.png",
+      "size": 25636,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage159.png",
+      "size": 427617,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage160.png",
+      "size": 1934008,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage2.svg",
+      "size": 400,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage3.png",
+      "size": 20351,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage4.svg",
+      "size": 400,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage5.png",
+      "size": 90165,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage6.svg",
+      "size": 400,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgImage7.png",
+      "size": 19315,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s0-imgWifi.svg",
+      "size": 1625,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgCap.svg",
+      "size": 340,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgCellularConnection.svg",
+      "size": 1171,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgFrame2121316838.svg",
+      "size": 1646,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgFrame2121316839.svg",
+      "size": 1290,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgFrame2121316840.svg",
+      "size": 1283,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgFrame2121316841.svg",
+      "size": 1655,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgFrame2121316842.svg",
+      "size": 1644,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgFrame2121316843.svg",
+      "size": 1662,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgFrame2121316844.svg",
+      "size": 1651,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgFrame2121316846.svg",
+      "size": 1652,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgGroup5.svg",
+      "size": 2347,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgImage.svg",
+      "size": 375,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgImage1.png",
+      "size": 35707,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgImage173.png",
+      "size": 1869815,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgImage174.png",
+      "size": 1615049,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgImage175.png",
+      "size": 1967334,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgImage176.png",
+      "size": 2927369,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgImage2.svg",
+      "size": 396,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgImage3.png",
+      "size": 19308,
+      "ext": "png",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgVector27.svg",
+      "size": 332,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgVector28.svg",
+      "size": 332,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgVector29.svg",
+      "size": 333,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgVector31.svg",
+      "size": 333,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgVector32.svg",
+      "size": 333,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgVector33.svg",
+      "size": 332,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgVector34.svg",
+      "size": 332,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgVector35.svg",
+      "size": 327,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgVector36.svg",
+      "size": 333,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s1-imgWifi.svg",
+      "size": 1625,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s2-imgCap.svg",
+      "size": 340,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s2-imgCellularConnection.svg",
+      "size": 1171,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/s2-imgWifi.svg",
+      "size": 1625,
+      "ext": "svg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/satoshi-400.woff2",
+      "size": 25516,
+      "ext": "woff2",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/satoshi-500.woff2",
+      "size": 25596,
+      "ext": "woff2",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/satoshi-700.woff2",
+      "size": 25328,
+      "ext": "woff2",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/satoshi-900.woff2",
+      "size": 23484,
+      "ext": "woff2",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/assets/spain_landmark.jpg",
+      "size": 1008947,
+      "ext": "jpg",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/fit.css",
+      "size": 2615,
+      "ext": "css",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/index-v0.html",
+      "size": 3912,
+      "ext": "html",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/index-v1.html",
+      "size": 4217,
+      "ext": "html",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/index.html",
+      "size": 5186,
+      "ext": "html",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/styles-v0.css",
+      "size": 20986,
+      "ext": "css",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/styles-v1.css",
+      "size": 20300,
+      "ext": "css",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "tanitim/styles.css",
+      "size": 10465,
+      "ext": "css",
+      "group": "Tanıtım akışı"
+    },
+    {
+      "path": "vercel.json",
+      "size": 104,
+      "ext": "json",
+      "group": "Kök"
+    }
+  ]
+}

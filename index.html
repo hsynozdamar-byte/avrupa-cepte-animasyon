@@ -57,6 +57,11 @@
 
   .scenes { margin: 0; padding: 0; list-style: none; }
   .scenes li { border-top: 1px solid var(--line); }
+  .scenes .sn {
+    margin-left: auto; padding-right: 14px;
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 11px; color: var(--muted);
+  }
   .scenes li:first-child { border-top: 0; }
   .scenes a {
     display: flex; align-items: baseline; gap: 16px;
@@ -93,6 +98,7 @@
     <a href="/splash/">Açılış</a>
     <a href="/onboarding/">Onboarding</a>
     <a href="/tanitim/">Tanıtım</a>
+    <a href="/gelistirici/">Geliştirici</a>
   </div>
 </nav>
 
@@ -109,12 +115,12 @@
       <h3>Açılış akışı</h3>
       <p>Uygulama açılırken iki splash peş peşe oynar, ardından ana ekran gelir. Kâğıt uçak izleri app ikonuna dönüşür.</p>
       <a class="open" href="splash/">Aç</a>
-      <span class="meta">3 mod · 4,6 sn</span>
+      <span class="meta">3 mod · tam akış 4,6 sn</span>
     </div>
     <ul class="scenes">
-      <li><a href="splash/"><span class="idx">01</span> Tam akış <span class="arr">→</span></a></li>
-      <li><a href="splash/#m=ac"><span class="idx">02</span> Avrupa Cepte splash <span class="arr">→</span></a></li>
-      <li><a href="splash/#m=midas"><span class="idx">03</span> Sponsor splash <span class="arr">→</span></a></li>
+      <li><a href="splash/"><span class="idx">01</span> Tam akış <span class="sn">4,6 sn</span><span class="arr">→</span></a></li>
+      <li><a href="splash/#m=ac"><span class="idx">02</span> Avrupa Cepte splash <span class="sn">2,5 sn</span><span class="arr">→</span></a></li>
+      <li><a href="splash/#m=midas"><span class="idx">03</span> Sponsor splash <span class="sn">2,2 sn</span><span class="arr">→</span></a></li>
     </ul>
   </article>
 
@@ -124,14 +130,14 @@
       <h3>Onboarding akışı</h3>
       <p>Dört karşılama ekranı: buluşma, tavsiye alışverişi, konu küresiyle kişisel akış ve tanıtım erişimi. Karakter yok; küre, kart ve gerçek arayüz parçalarıyla anlatılıyor.</p>
       <a class="open" href="onboarding/">Aç</a>
-      <span class="meta">4 sahne · 40 sn</span>
+      <span class="meta">4 ekran · 10'ar sn · toplam 40 sn</span>
     </div>
     <ul class="scenes">
-      <li><a href="onboarding/"><span class="idx">00</span> Tam akış <span class="arr">→</span></a></li>
-      <li><a href="onboarding/#s=1"><span class="idx">01</span> Bir tanıdığın var <span class="arr">→</span></a></li>
-      <li><a href="onboarding/#s=2"><span class="idx">02</span> Sor, paylaş, tavsiye al <span class="arr">→</span></a></li>
-      <li><a href="onboarding/#s=3"><span class="idx">03</span> Gündemi takip et <span class="arr">→</span></a></li>
-      <li><a href="onboarding/#s=4"><span class="idx">04</span> Binlerce kişiye ulaş <span class="arr">→</span></a></li>
+      <li><a href="onboarding/"><span class="idx">00</span> Tam akış <span class="sn">40 sn</span><span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=1"><span class="idx">01</span> Avrupa’nın her yerinde bir tanıdığın var <span class="sn">10 sn</span><span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=2"><span class="idx">02</span> Sor, paylaş, tavsiye al <span class="sn">10 sn</span><span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=3"><span class="idx">03</span> Gündemi takip et, hiçbir şeyi kaçırma <span class="sn">10 sn</span><span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=4"><span class="idx">04</span> İşletmeni binlerce kişiye ulaştır <span class="sn">10 sn</span><span class="arr">→</span></a></li>
     </ul>
   </article>
 
@@ -141,12 +147,28 @@
       <h3>Tanıtım akışı</h3>
       <p>Görünürlükten sese giden üç sahnelik ürün anlatısı: gönderi, topluluk ağı ve Avrupa'ya yayılım.</p>
       <a class="open" href="tanitim/">Aç</a>
-      <span class="meta">3 sahne · 20 sn</span>
+      <span class="meta">3 sahne · toplam 20 sn</span>
     </div>
     <ul class="scenes">
-      <li><a href="tanitim/#s=1"><span class="idx">01</span> Görünür ol <span class="arr">→</span></a></li>
-      <li><a href="tanitim/#s=2"><span class="idx">02</span> Topluluğuna ulaş <span class="arr">→</span></a></li>
-      <li><a href="tanitim/#s=3"><span class="idx">03</span> Sesini duyur <span class="arr">→</span></a></li>
+      <li><a href="tanitim/#s=1"><span class="idx">01</span> Gönderini daha fazla kişiye ulaştır <span class="sn">5 sn</span><span class="arr">→</span></a></li>
+      <li><a href="tanitim/#s=2"><span class="idx">02</span> İlgili topluluklara ulaş <span class="sn">5 sn</span><span class="arr">→</span></a></li>
+      <li><a href="tanitim/#s=3"><span class="idx">03</span> Sesin Avrupa’da yankılansın <span class="sn">10 sn</span><span class="arr">→</span></a></li>
+    </ul>
+  </article>
+
+  <article class="flow">
+    <div class="flow-head">
+      <span class="num">04</span>
+      <h3>Geliştirici paketi</h3>
+      <p>Kaynak dosyalar, varlıklar, tasarım değerleri ve gömme örnekleri. Her şey tek tek ya da ZIP olarak indirilebilir; derleme adımı yok.</p>
+      <a class="open" href="gelistirici/">Aç</a>
+      <span class="meta">123 dosya · 18,9 MB</span>
+    </div>
+    <ul class="scenes">
+      <li><a href="gelistirici/#indir"><span class="idx">01</span> Paketleri indir (ZIP) <span class="arr">→</span></a></li>
+      <li><a href="gelistirici/"><span class="idx">02</span> Çalıştırma ve gömme <span class="arr">→</span></a></li>
+      <li><a href="gelistirici/"><span class="idx">03</span> Tasarım değerleri <span class="arr">→</span></a></li>
+      <li><a href="dosyalar.json"><span class="idx">04</span> Dosya listesi (JSON) <span class="arr">→</span></a></li>
     </ul>
   </article>
 
