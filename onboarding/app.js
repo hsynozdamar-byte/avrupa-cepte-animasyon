@@ -1258,7 +1258,7 @@ function scene3() {
 /* ═══════════ 04 · Binlerce kişiye ulaş ═══════════ */
 /* Tanıtım gönderisi (s.31) yayına girer; erişim dalgaları yayılır, farklı
    ülkelerden kişiler izleyici sırasına eklenir, sayaç büyür ve bildirimler
-   (s.103) gelir: yayına alındı, mesaj, paylaşım, öne çıkma. */
+   (s.103) gelir: yayına alındı, görüntülenme, tıklama, ülkeler. */
 function scene4() {
   const g = G([]);
   const view = G([], { mask: 'url(#obView4)' });
@@ -1355,22 +1355,25 @@ function scene4() {
   /* --- bildirimler --- */
   const NT = AY + 32, NH = 56, NG = 6;
   const MEGA = 'M-6.5 -2.6 H-3 L4.5 -7 V7 L-3 2.6 H-6.5 Z M-4.4 2.6 L-3 7.2';
-  /* göz: görüntülenme bildirimleri için */
+  /* göz: görüntülenme, ok: karttaki “Ziyaret et” bağlantısı */
   const EYE = 'M-7.5 0 C-4.5 -4.6 4.5 -4.6 7.5 0 C4.5 4.6 -4.5 4.6 -7.5 0 Z M0 -2.1 A2.1 2.1 0 1 1 0 2.1 A2.1 2.1 0 1 1 0 -2.1';
-  /* Bildirimler yalnızca tanıtımın kendisiyle ilgili: yayına alınma, görüntülenme,
-     tanıtımdan gelen mesaj, hangi ülkelerden görüldüğü. Profil/öne çıkma yok. */
+  const LINK = 'M-5 5 L5 -5 M-2.6 -5 H5 V2.6';
+  /* Bildirimler yalnızca üründe gerçekten olan şeyler: yayına alınma,
+     görüntülenme, karttaki “Ziyaret et” tıklaması, hangi ülkelerden görüldüğü.
+     Profil görüntüleme, öne çıkma ve tanıtımdan mesajlaşma yok: öyle bir
+     özellik bulunmuyor. */
   const NOTES4 = [
     { icon: 'mega', title: 'Tanıtımın yayına alındı', sub: '/almanya ve /avrupa sayfalarında', when: 'şimdi', a: 6.95 },
     { icon: 'eye', title: 'Tanıtımın 5.000 kez görüntülendi', sub: 'Son bir saatte', when: '1 dk', a: 8.1 },
-    { icon: 'kisi-1.jpg', title: 'Deniz A. tanıtımından yazdı', sub: '“Randevu için müsait misiniz?”', when: '2 dk', a: 9.4 },
+    { icon: 'link', title: '“Ziyaret et” 320 kez tıklandı', sub: 'Tanıtım kartından siteye', when: '2 dk', a: 9.4 },
     { icon: 'avrupa', title: 'Tanıtımın 7 ülkeden görüntülendi', sub: 'Almanya, Hollanda, Fransa…', when: '5 dk', a: 10.7 }
   ];
   const notes = NOTES4.map(n => {
     let ic;
     if (n.icon === 'mega') ic = G([S('circle', { class: 'ui-tint', cx: 0, cy: 0, r: 18 }), S('path', { class: 'ui-ico-b', d: MEGA })]);
     else if (n.icon === 'eye') ic = G([S('circle', { class: 'ui-tint', cx: 0, cy: 0, r: 18 }), S('path', { class: 'ui-ico-b', d: EYE })]);
-    else if (n.icon === 'avrupa') ic = flagDot('avrupa', 18);
-    else ic = G([face(n.icon, 18), S('circle', { class: 'ui-tint', cx: 13, cy: 13, r: 6.5 }), S('circle', { class: 'ui-dot', cx: 13, cy: 13, r: 2.6 })]);
+    else if (n.icon === 'link') ic = G([S('circle', { class: 'ui-tint', cx: 0, cy: 0, r: 18 }), S('path', { class: 'ui-ico-b', d: LINK })]);
+    else ic = flagDot('avrupa', 18);
     const e = G([
       S('rect', { class: 'ui-card', x: 0, y: 0, width: UW, height: NH, rx: 16, filter: 'url(#obRowSh)' }),
       G([ic], { transform: tr(14 + 18, NH / 2) }),
@@ -1486,7 +1489,7 @@ const NOTES = {
   1: 'Şehirler uyandıkça topluluğun üstünde parıltı çakar, son saniyeye kadar sürer. Küre sağ alttan kadraja yükselir, uçak arkasından çıkıp çevresinde tur atar ve Avrupa’ya dalar; kamera onunla yakınlaşır. Tur bitince sol kenardan geniş bir bankaya girer, büyür ve hızlanarak sağ üst köşeden uzaklaşır. İkondaki uçak şehirlerin üzerinden geçtikçe noktalar büyür; içinden o şehirdeki kişi ve ülke rozeti çıkar.',
   2: 'Akış kayar ve sorunun olduğu gönderide durur. Farklı şehirlerden cevaplar yazılarak gelip kartın altına dizilir; biri en iyi cevap seçilip kartın içine çıkar, gönderi “Soru Çözüldü” olur. Rozetlerde parıltı çakar; sonrasında akış yukarı süzülür ve iki cevap daha gelir, sohbet donup kalmaz.',
   3: 'Konumdan seçilen iki sayfaya üç sayfa daha işaretlenir (beş kart, 2,5 sn); yedi konu hapına dönüşüp 3B bir konu küresine dizilir. Küre her konuyu öne getirip durur, o konuya basılır ve ilgili haber parıltıyla açılır. Duraklarda bile salınım sürer, ekran donmaz.',
-  4: 'Tanıtım yayına girince kart küçülür ve altında Avrupa açılır: Berlin’den uzanan kavisler şehirleri tek tek uyandırır, her şehirden bir kişi çıkar (01’deki his). Sonra kişiler izleyici sırasına akar, kart büyür ve istatistikler gelir: sayaç, dalgalar ve yalnızca tanıtımla ilgili bildirimler.'
+  4: 'Tanıtım yayına girince kart küçülür ve altında Avrupa açılır: Berlin’den uzanan kavisler şehirleri tek tek uyandırır, her şehirden bir kişi çıkar (01’deki his). Sonra kişiler izleyici sırasına akar, kart büyür ve istatistikler gelir: sayaç, dalgalar ve tanıtımla ilgili bildirimler (yayın, görüntülenme, “Ziyaret et” tıklaması, ülkeler).'
 };
 
 /* ═══════════ kurulum ═══════════ */
