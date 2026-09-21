@@ -1508,6 +1508,7 @@ let mode = 'full';
 let dur = TOTAL;
 let t = 0, playing = false, speed = 1, last = 0, shown = -1, holdUntil = 0;
 const HOLD = 1.5;                  /* tam akışta ekranlar arası bekleme (sn) */
+const progEls = [...$('#obProg').children].map(i => i.firstElementChild);
 
 function scaleStage() {
   const w = $('#screen').clientWidth;
@@ -1584,6 +1585,11 @@ function render(time, extra) {
     if (k === idx) { s.g.style.display = ''; s.update(local); }
     else s.g.style.display = 'none';
   });
+
+  /* hikâye çubuğu: bulunduğumuz dilim dolar, öncekiler tam, sonrakiler boş.
+     Tam akışta dilim süre + bekleme boyunca dolduğu için tam dolunca geçilir. */
+  const span = mode === 'full' && idx < 3 ? DURS[idx] + HOLD : DURS[idx];
+  progEls.forEach((b, k) => { b.style.width = ((k < idx ? 1 : k > idx ? 0 : clamp(local / span)) * 100).toFixed(2) + '%'; });
 
   $('#time').innerHTML = time.toFixed(2).replace('.', ',') + '<small>saniye</small>';
   $('#scrub').value = Math.round(time * 1000);

@@ -20,6 +20,13 @@
   }
   .art { left: 0; top: 0; width: 393px; height: 852px; overflow: visible; }
 
+  /* hikâye çubuğu: her ekran için bir dilim, dolunca sıradakine geçilir.
+     Dilim ekran süresi + geçiş beklemesi boyunca dolar, yani tam dolduğu an
+     geçiş olur; boşa dolmuş bekleyen çubuk kalmaz. */
+  .prog { left: 24px; top: 58px; width: 345px; display: flex; gap: 4px; }
+  .prog i { flex: 1; height: 3px; border-radius: 2px; background: var(--line); overflow: hidden; }
+  .prog i b { display: block; height: 100%; width: 0; border-radius: 2px; background: var(--brand); }
+
   .skip, .cta { cursor: pointer; }
   .skip {
     right: 24px; top: 70px; margin: 0;
@@ -132,6 +139,7 @@
         <div class="bg"></div>
         <svg class="art" id="art" viewBox="0 0 393 852" aria-hidden="true"></svg>
         <img class="status" src="../assets/status.png" alt="" id="status">
+        <div class="prog" id="obProg" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
         <p class="skip">Atla</p>
         <div class="copy">
           <h3 id="obHead">Avrupa’nın her yerinde<br>bir tanıdığın var</h3>
