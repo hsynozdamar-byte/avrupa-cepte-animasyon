@@ -282,7 +282,10 @@ function invert(tab, u) {
 
 function scene1() {
   const g = G([]);
-  const GX = 196.5, GY = 282;       /* kürenin durduğu yer */
+  /* Kürenin durduğu yer: sanat alanı 58–580 arası, ortası 319. GY 282'deyken
+     küre üstte kalıyor, altında boşluk birikiyordu. Yakın plan merkezi (MY)
+     değişmedi: dalıştan sonraki konumlar aynı. */
+  const GX = 196.5, GY = 316;
   const MX = 196.5, MY = 270;       /* yakın plan haritanın merkezi */
   const R0 = 116, R1 = 690;         /* küre yarıçapı → Avrupa yakın planı */
   const FOCUS = [12.6, 49.6];       /* yakın planın merkezi: Madrid'den İstanbul'a */
