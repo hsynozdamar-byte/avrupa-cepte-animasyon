@@ -57,8 +57,10 @@
 
   .scenes { margin: 0; padding: 0; list-style: none; }
   .scenes li { border-top: 1px solid var(--line); }
+  /* başlık esner, süre sabit genişlikte sağa yaslanır: tüm satırlarda aynı hiza */
+  .scenes .ttl { flex: 1; min-width: 0; }
   .scenes .sn {
-    margin-left: auto; padding-right: 14px;
+    flex: none; width: 52px; text-align: right;
     font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
     font-size: 11px; color: var(--muted);
   }
@@ -74,7 +76,7 @@
     font-size: 12px; color: var(--muted); flex: none; width: 24px;
   }
   .scenes a:hover .idx { color: var(--accent); }
-  .scenes .arr { margin-left: auto; color: var(--muted); font-size: 13px; }
+  .scenes .arr { flex: none; margin-left: 14px; color: var(--muted); font-size: 13px; }
   .scenes a:hover .arr { color: var(--accent); }
 
   @media (max-width: 760px) {
@@ -118,9 +120,9 @@
       <span class="meta">3 mod · tam akış 4,6 sn</span>
     </div>
     <ul class="scenes">
-      <li><a href="splash/"><span class="idx">01</span> Tam akış <span class="sn">4,6 sn</span><span class="arr">→</span></a></li>
-      <li><a href="splash/#m=ac"><span class="idx">02</span> Avrupa Cepte splash <span class="sn">2,5 sn</span><span class="arr">→</span></a></li>
-      <li><a href="splash/#m=midas"><span class="idx">03</span> Sponsor splash <span class="sn">2,2 sn</span><span class="arr">→</span></a></li>
+      <li><a href="splash/"><span class="idx">01</span><span class="ttl">Tam akış</span> <span class="sn">4,6 sn</span><span class="arr">→</span></a></li>
+      <li><a href="splash/#m=ac"><span class="idx">02</span><span class="ttl">Avrupa Cepte splash</span> <span class="sn">2,5 sn</span><span class="arr">→</span></a></li>
+      <li><a href="splash/#m=midas"><span class="idx">03</span><span class="ttl">Sponsor splash</span> <span class="sn">2,2 sn</span><span class="arr">→</span></a></li>
     </ul>
   </article>
 
@@ -133,11 +135,11 @@
       <span class="meta">4 ekran · 10'ar sn · toplam 40 sn</span>
     </div>
     <ul class="scenes">
-      <li><a href="onboarding/"><span class="idx">00</span> Tam akış <span class="sn">40 sn</span><span class="arr">→</span></a></li>
-      <li><a href="onboarding/#s=1"><span class="idx">01</span> Avrupa’nın her yerinde bir tanıdığın var <span class="sn">10 sn</span><span class="arr">→</span></a></li>
-      <li><a href="onboarding/#s=2"><span class="idx">02</span> Sor, paylaş, tavsiye al <span class="sn">10 sn</span><span class="arr">→</span></a></li>
-      <li><a href="onboarding/#s=3"><span class="idx">03</span> Gündemi takip et, hiçbir şeyi kaçırma <span class="sn">10 sn</span><span class="arr">→</span></a></li>
-      <li><a href="onboarding/#s=4"><span class="idx">04</span> İşletmeni binlerce kişiye ulaştır <span class="sn">10 sn</span><span class="arr">→</span></a></li>
+      <li><a href="onboarding/"><span class="idx">00</span><span class="ttl">Tam akış</span> <span class="sn">40 sn</span><span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=1"><span class="idx">01</span><span class="ttl">Avrupa’nın her yerinde bir tanıdığın var</span> <span class="sn">10 sn</span><span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=2"><span class="idx">02</span><span class="ttl">Sor, paylaş, tavsiye al</span> <span class="sn">10 sn</span><span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=3"><span class="idx">03</span><span class="ttl">Gündemi takip et, hiçbir şeyi kaçırma</span> <span class="sn">10 sn</span><span class="arr">→</span></a></li>
+      <li><a href="onboarding/#s=4"><span class="idx">04</span><span class="ttl">İşletmeni binlerce kişiye ulaştır</span> <span class="sn">10 sn</span><span class="arr">→</span></a></li>
     </ul>
   </article>
 
@@ -150,9 +152,9 @@
       <span class="meta">3 sahne · toplam 20 sn</span>
     </div>
     <ul class="scenes">
-      <li><a href="tanitim/#s=1"><span class="idx">01</span> Gönderini daha fazla kişiye ulaştır <span class="sn">5 sn</span><span class="arr">→</span></a></li>
-      <li><a href="tanitim/#s=2"><span class="idx">02</span> İlgili topluluklara ulaş <span class="sn">5 sn</span><span class="arr">→</span></a></li>
-      <li><a href="tanitim/#s=3"><span class="idx">03</span> Sesin Avrupa’da yankılansın <span class="sn">10 sn</span><span class="arr">→</span></a></li>
+      <li><a href="tanitim/#s=1"><span class="idx">01</span><span class="ttl">Gönderini daha fazla kişiye ulaştır</span> <span class="sn">5 sn</span><span class="arr">→</span></a></li>
+      <li><a href="tanitim/#s=2"><span class="idx">02</span><span class="ttl">İlgili topluluklara ulaş</span> <span class="sn">5 sn</span><span class="arr">→</span></a></li>
+      <li><a href="tanitim/#s=3"><span class="idx">03</span><span class="ttl">Sesin Avrupa’da yankılansın</span> <span class="sn">10 sn</span><span class="arr">→</span></a></li>
     </ul>
   </article>
 
@@ -165,10 +167,10 @@
       <span class="meta">123 dosya · 18,9 MB</span>
     </div>
     <ul class="scenes">
-      <li><a href="gelistirici/#indir"><span class="idx">01</span> Paketleri indir (ZIP) <span class="arr">→</span></a></li>
-      <li><a href="gelistirici/"><span class="idx">02</span> Çalıştırma ve gömme <span class="arr">→</span></a></li>
-      <li><a href="gelistirici/"><span class="idx">03</span> Tasarım değerleri <span class="arr">→</span></a></li>
-      <li><a href="dosyalar.json"><span class="idx">04</span> Dosya listesi (JSON) <span class="arr">→</span></a></li>
+      <li><a href="gelistirici/#indir"><span class="idx">01</span><span class="ttl">Paketleri indir (ZIP)</span><span class="arr">→</span></a></li>
+      <li><a href="gelistirici/"><span class="idx">02</span><span class="ttl">Çalıştırma ve gömme</span><span class="arr">→</span></a></li>
+      <li><a href="gelistirici/"><span class="idx">03</span><span class="ttl">Tasarım değerleri</span><span class="arr">→</span></a></li>
+      <li><a href="dosyalar.json"><span class="idx">04</span><span class="ttl">Dosya listesi (JSON)</span><span class="arr">→</span></a></li>
     </ul>
   </article>
 
